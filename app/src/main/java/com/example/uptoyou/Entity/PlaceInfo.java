@@ -15,16 +15,18 @@ public class PlaceInfo {
     private String address;
     private String phoneNumber;
     private Uri websiteUri;
-    private LatLng latlng;
+    private double lat;
+    private double lng;
     private String type;
 
-    public PlaceInfo(int placeId, String name, String address, String phoneNumber, Uri websiteUri, LatLng latlng, String type) {
+    public PlaceInfo(int placeId, String name, String address, String phoneNumber, Uri websiteUri, double lat, double lng, String type) {
         this.placeId = placeId;
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.websiteUri = websiteUri;
-        this.latlng = latlng;
+        this.lat = lat;
+        this.lng = lng;
         this.type = type;
     }
 
@@ -68,19 +70,27 @@ public class PlaceInfo {
         this.websiteUri = websiteUri;
     }
 
-    public LatLng getLatlng() {
-        return latlng;
-    }
-
-    public void setLatlng(LatLng latlng) {
-        this.latlng = latlng;
-    }
-
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 }
