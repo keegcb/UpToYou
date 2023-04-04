@@ -2,10 +2,12 @@ package com.example.uptoyou.Entity;
 
 import android.net.Uri;
 
+import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.google.android.gms.maps.model.LatLng;
 
+@Entity(tableName = "PlaceInfo")
 public class PlaceInfo {
     @PrimaryKey private int placeId;
 
