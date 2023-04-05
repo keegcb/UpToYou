@@ -5,13 +5,11 @@ import android.net.Uri;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.google.android.gms.maps.model.LatLng;
-
 @Entity(tableName = "PlaceInfo")
 public class PlaceInfo {
     @PrimaryKey private int placeId;
 
-    private String name;
+    private String placeName;
     private String address;
     private String phoneNumber;
     private Uri websiteUri;
@@ -21,7 +19,7 @@ public class PlaceInfo {
 
     public PlaceInfo(int placeId, String name, String address, String phoneNumber, Uri websiteUri, double lat, double lng, String type) {
         this.placeId = placeId;
-        this.name = name;
+        this.placeName = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.websiteUri = websiteUri;
@@ -38,12 +36,12 @@ public class PlaceInfo {
         this.placeId = placeId;
     }
 
-    public String getName() {
-        return name;
+    public String getPlaceName() {
+        return placeName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
     public String getAddress() {
