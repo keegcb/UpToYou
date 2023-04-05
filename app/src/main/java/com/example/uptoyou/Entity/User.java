@@ -10,7 +10,6 @@ public class User {
 
     private String userName;
     private int preferenceId;
-    private int historyId;
     private double homeLat;
     private double homeLng;
 
