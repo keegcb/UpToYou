@@ -18,8 +18,9 @@ import com.example.uptoyou.Entity.FoodRank;
 import com.example.uptoyou.Entity.History;
 import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.Entity.Preference;
+import com.example.uptoyou.Entity.User;
 
-@Database(entities = {Preference.class, FoodRank.class, ActivityRank.class, PlaceInfo.class, History.class}, version = 1, exportSchema = false)
+@Database(entities = {User.class, Preference.class, FoodRank.class, ActivityRank.class, PlaceInfo.class, History.class}, version = 1, exportSchema = false)
 @TypeConverters(DataConverter.class)
 public abstract class DatabaseBuilder extends RoomDatabase {
     public abstract UserDAO userDAO();
@@ -27,7 +28,7 @@ public abstract class DatabaseBuilder extends RoomDatabase {
     public abstract FoodRankDAO foodRankDAO();
     public abstract ActivityRankDAO activityRankDAO();
     public abstract PlaceInfoDAO placeInfoDAO();
-    public abstract HistoryDAO hisotryDAO();
+    public abstract HistoryDAO historyDAO();
 
     private static volatile DatabaseBuilder INSTANCE;
 

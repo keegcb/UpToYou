@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Preference")
 public class Preference {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     private int preferenceId;
     private float distance;
     private int foodId;
@@ -50,8 +50,7 @@ public class Preference {
     private boolean tourist_attraction;
     private boolean zoo;
 
-    public Preference(int preferenceId, float distance, boolean american, boolean bbq, boolean chinese, boolean french, boolean hamburger, boolean indian, boolean italian, boolean japanese, boolean mexican, boolean pizza, boolean seafood, boolean steak, boolean sushi, boolean thai, boolean arcade, boolean axe_throwing, boolean beach, boolean bowling, boolean casino, boolean disk_golf, boolean escape_room, boolean garden, boolean golf, boolean library, boolean hiking, boolean mini_golf, boolean movie_rental, boolean movie_theater, boolean museum, boolean park, boolean rage_room, boolean shopping_mall, boolean spa, boolean theme_park, boolean tourist_attraction, boolean zoo) {
-        this.preferenceId = preferenceId;
+    public Preference(float distance, boolean american, boolean bbq, boolean chinese, boolean french, boolean hamburger, boolean indian, boolean italian, boolean japanese, boolean mexican, boolean pizza, boolean seafood, boolean steak, boolean sushi, boolean thai, boolean arcade, boolean axe_throwing, boolean beach, boolean bowling, boolean casino, boolean disk_golf, boolean escape_room, boolean garden, boolean golf, boolean library, boolean hiking, boolean mini_golf, boolean movie_rental, boolean movie_theater, boolean museum, boolean park, boolean rage_room, boolean shopping_mall, boolean spa, boolean theme_park, boolean tourist_attraction, boolean zoo) {
         this.distance = distance;
         this.american = american;
         this.bbq = bbq;

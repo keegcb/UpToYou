@@ -14,8 +14,7 @@ public class History {
     private int placeId;
     private Date date;
 
-    public History(int historyId, int userId, int placeId, Date date) {
-        this.historyId = historyId;
+    public History(int userId, int placeId, Date date) {
         this.userId = userId;
         this.placeId = placeId;
         this.date = date;

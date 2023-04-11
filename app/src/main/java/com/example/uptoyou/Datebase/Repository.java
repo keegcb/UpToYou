@@ -36,7 +36,7 @@ public class Repository {
         foodRankDAO = db.foodRankDAO();
         activityRankDAO = db.activityRankDAO();
         placeInfoDAO = db.placeInfoDAO();
-        historyDAO = db.hisotryDAO();
+        historyDAO = db.historyDAO();
     }
 
     public void insertUser(User user){

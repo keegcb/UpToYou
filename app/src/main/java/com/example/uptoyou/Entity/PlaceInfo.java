@@ -7,19 +7,20 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "PlaceInfo")
 public class PlaceInfo {
-    @PrimaryKey private int placeId;
+    @PrimaryKey (autoGenerate = false)
+    private int placeId;
 
     private String placeName;
     private String address;
     private String phoneNumber;
-    private Uri websiteUri;
+    private String websiteUri;
     private double lat;
     private double lng;
     private String type;
 
-    public PlaceInfo(int placeId, String name, String address, String phoneNumber, Uri websiteUri, double lat, double lng, String type) {
-        this.placeId = placeId;
-        this.placeName = name;
+
+    public PlaceInfo(String placeName, String address, String phoneNumber, String websiteUri, double lat, double lng, String type){
+        this.placeName = placeName;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.websiteUri = websiteUri;
@@ -60,11 +61,11 @@ public class PlaceInfo {
         this.phoneNumber = phoneNumber;
     }
 
-    public Uri getWebsiteUri() {
+    public String getWebsiteUri() {
         return websiteUri;
     }
 
-    public void setWebsiteUri(Uri websiteUri) {
+    public void setWebsiteUri(String websiteUri) {
         this.websiteUri = websiteUri;
     }
 

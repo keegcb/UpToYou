@@ -23,8 +23,7 @@ public class FoodRank {
     private int sushi;
     private int thai;
 
-    public FoodRank(int foodId, int american, int bbq, int chinese, int french, int hamburger, int indian, int italian, int japanese, int mexican, int pizza, int seafood, int steak, int sushi, int thai) {
-        this.foodId = foodId;
+    public FoodRank(int american, int bbq, int chinese, int french, int hamburger, int indian, int italian, int japanese, int mexican, int pizza, int seafood, int steak, int sushi, int thai) {
         this.american = american;
         this.bbq = bbq;
         this.chinese = chinese;

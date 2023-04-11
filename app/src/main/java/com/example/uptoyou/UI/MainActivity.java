@@ -1,20 +1,20 @@
 package com.example.uptoyou.UI;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.uptoyou.Datebase.Repository;
+import com.example.uptoyou.Entity.ActivityRank;
+import com.example.uptoyou.Entity.FoodRank;
+import com.example.uptoyou.Entity.Preference;
+import com.example.uptoyou.Entity.User;
 import com.example.uptoyou.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -24,18 +24,24 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
+    Repository repo = new Repository(getApplication());
+
+    Button btnAddData;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnAddData = findViewById(R.id.btnAddData);
         if(correctServices()){
-            init();
+            initMap();
+            initSettings();
         }
     }
 
-    private void init(){
+    private void initMap(){
         Button btnMap = (Button) findViewById(R.id.btnMap);
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,5 +73,32 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    private void initSettings(){
+        Button btnSetting = (Button) findViewById(R.id.btnSetting);
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
+    public void addData(View view) {
+        User user = new User("user", 1, 42.33461099979685, -83.0465496496764);
+        Preference preference = new Preference(20, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
+        preference.setPreferenceId(1);
+        FoodRank fRank = new FoodRank(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        fRank.setFoodId(1);
+        ActivityRank aRank = new ActivityRank(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        aRank.setActivityId(1);
+        preference.setFoodId(1);
+        preference.setActivityId(1);
+
+        repo.insertUser(user);
+        repo.insertPreference(preference);
+        repo.insertFoodRank(fRank);
+        repo.insertActivityRank(aRank);
+    }
 }

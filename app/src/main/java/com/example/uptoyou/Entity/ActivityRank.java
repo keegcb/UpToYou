@@ -31,8 +31,7 @@ public class ActivityRank {
     private int tourist_attraction;
     private int zoo;
 
-    public ActivityRank(int activityId, int arcade, int axe_throwing, int beach, int bowling, int casino, int disk_golf, int escape_room, int garden, int golf, int library, int hiking, int mini_golf, int movie_rental, int movie_theater, int museum, int park, int rage_room, int shopping_mall, int spa, int theme_park, int tourist_attraction, int zoo) {
-        this.activityId = activityId;
+    public ActivityRank(int arcade, int axe_throwing, int beach, int bowling, int casino, int disk_golf, int escape_room, int garden, int golf, int library, int hiking, int mini_golf, int movie_rental, int movie_theater, int museum, int park, int rage_room, int shopping_mall, int spa, int theme_park, int tourist_attraction, int zoo) {
         this.arcade = arcade;
         this.axe_throwing = axe_throwing;
         this.beach = beach;
