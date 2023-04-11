@@ -2,7 +2,7 @@
     <string name="app_name">UpToYou</string>
     <string name="google_maps_API_key">AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw</string>
     <string name="title_activity_preferences">PreferencesActivity</string>
-    <string-array name="food_preference">
+    <string-array name="food">
         <item>American</item>
         <item>BBQ</item>
         <item>Chinese</item>
@@ -17,6 +17,30 @@
         <item>Steak</item>
         <item>Sushi</item>
         <item>Thai</item>
+    </string-array>
+    <string-array name="activity">
+        <item>Arcade</item>
+        <item>Axe Throwing</item>
+        <item>Beach</item>
+        <item>Bowling</item>
+        <item>Casino</item>
+        <item>Disk Golf</item>
+        <item>Escape Room</item>
+        <item>Garden</item>
+        <item>Golf</item>
+        <item>Library</item>
+        <item>Hiking</item>
+        <item>Mini Golf</item>
+        <item>Movie Rental</item>
+        <item>Movie Theater</item>
+        <item>Museum</item>
+        <item>Park</item>
+        <item>Rage Room</item>
+        <item>Shopping Mall</item>
+        <item>Spa</item>
+        <item>Theme Park</item>
+        <item>Tourist Attraction</item>
+        <item>Zoo</item>
     </string-array>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
