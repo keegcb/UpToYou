@@ -2,6 +2,22 @@
     <string name="app_name">UpToYou</string>
     <string name="google_maps_API_key">AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw</string>
     <string name="title_activity_preferences">PreferencesActivity</string>
+    <string-array name="food_preference">
+        <item>American</item>
+        <item>BBQ</item>
+        <item>Chinese</item>
+        <item>French</item>
+        <item>Hamburger</item>
+        <item>Indian</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Mexican</item>
+        <item>Pizza</item>
+        <item>Seafood</item>
+        <item>Steak</item>
+        <item>Sushi</item>
+        <item>Thai</item>
+    </string-array>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

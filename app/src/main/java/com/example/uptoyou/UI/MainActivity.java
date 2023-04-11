@@ -24,8 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
-    Repository repo = new Repository(getApplication());
-
     Button btnAddData;
 
 
@@ -85,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addData(View view) {
+        Repository repo = new Repository(getApplication());
+
         User user = new User("user", 1, 42.33461099979685, -83.0465496496764);
         Preference preference = new Preference(20, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
                 false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
