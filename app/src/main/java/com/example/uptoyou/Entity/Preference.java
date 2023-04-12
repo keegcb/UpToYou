@@ -11,45 +11,6 @@ public class Preference {
     private int foodId;
     private int activityId;
 
-    //food preferences
-    private boolean american;
-    private boolean bbq;
-    private boolean chinese;
-    private boolean french;
-    private boolean hamburger;
-    private boolean indian;
-    private boolean italian;
-    private boolean japanese;
-    private boolean mexican;
-    private boolean pizza;
-    private boolean seafood;
-    private boolean steak;
-    private boolean sushi;
-    private boolean thai;
-    //activity preferences
-    private boolean arcade;
-    private boolean axe_throwing;
-    private boolean beach;
-    private boolean bowling;
-    private boolean casino;
-    private boolean disk_golf;
-    private boolean escape_room;
-    private boolean garden;
-    private boolean golf;
-    private boolean library;
-    private boolean hiking;
-    private boolean mini_golf;
-    private boolean movie_rental;
-    private boolean movie_theater;
-    private boolean museum;
-    private boolean park;
-    private boolean rage_room;
-    private boolean shopping_mall;
-    private boolean spa;
-    private boolean theme_park;
-    private boolean tourist_attraction;
-    private boolean zoo;
-
     public Preference(float distance, int foodId, int activityId) {
         this.distance = distance;
         this.foodId = foodId;

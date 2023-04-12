@@ -8,9 +8,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.example.uptoyou.DAO.ActivityPreferenceDAO;
-import com.example.uptoyou.DAO.ActivityRankDAO;
 import com.example.uptoyou.DAO.FoodPreferenceDAO;
-import com.example.uptoyou.DAO.FoodRankDAO;
 import com.example.uptoyou.DAO.HistoryDAO;
 import com.example.uptoyou.DAO.PlaceInfoDAO;
 import com.example.uptoyou.DAO.PreferenceDAO;
