@@ -1,6 +1,7 @@
 package com.example.uptoyou.UI.Adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -13,12 +14,13 @@ import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAdapter.MyViewHolder> {
     Context context;
-    ArrayList<FoodPreference> foodList;
+    List<FoodPreference> foodList;
 
-    public FoodPreferenceAdapter(Context context, ArrayList<FoodPreference> foodList){
+    public FoodPreferenceAdapter(Context context, List<FoodPreference> foodList){
         this.context = context;
         this.foodList = foodList;
     }
@@ -26,14 +28,17 @@ public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAd
     @NonNull
     @Override
     public FoodPreferenceAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.preference_item, parent,false);
+
+        return new FoodPreferenceAdapter.MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull FoodPreferenceAdapter.MyViewHolder holder, int position) {
         holder.checkBox.setActivated(foodList.get(position).isFoodDesired());
         holder.foodName.setText(foodList.get(position).getFoodName());
-        holder.foodRank.setText(foodList.get(position).getFoodRank());
+        holder.foodRank.setText(Integer.toString(foodList.get(position).getFoodRank()));
     }
 
     @Override

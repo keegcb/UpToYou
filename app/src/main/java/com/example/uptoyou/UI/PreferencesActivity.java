@@ -4,37 +4,51 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uptoyou.Datebase.Repository;
 import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.R;
+import com.example.uptoyou.UI.Adapter.ActivityPreferenceAdapter;
+import com.example.uptoyou.UI.Adapter.FoodPreferenceAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PreferencesActivity extends AppCompatActivity {
 
-    ArrayList<FoodPreference> foodList = new ArrayList<>();
-    ArrayList<ActivityPreference> activityList = new ArrayList<>();
+
+    List<FoodPreference> foodList;
+    List<ActivityPreference> activityList;
 
     @Override
     public void onCreate(@NonNull Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
+        Repository repo = new Repository(getApplication());
+
+        RecyclerView foodRecycler = findViewById(R.id.recycleFoodPref);
+        RecyclerView activityRecycler = findViewById(R.id.recycleActivityPref);
+
+        foodList = repo.getFoodByPreference(1);
+        FoodPreferenceAdapter foodAdapter = new FoodPreferenceAdapter(this, foodList);
+        foodRecycler.setAdapter(foodAdapter);
+        foodRecycler.setLayoutManager(new LinearLayoutManager(this));
+
+        activityList = repo.getActivityByPreference(1);
+        ActivityPreferenceAdapter activityAdapter = new ActivityPreferenceAdapter(this, activityList);
+        activityRecycler.setAdapter(activityAdapter);
+        activityRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
-
+/*
     private void setFoodList(){
-        String[] foodPreferences = getResources().getStringArray(R.array.food);
-
-        for (int i=0; i<foodPreferences.length; i++){
-            foodList.add(new FoodPreference(1, foodPreferences[i], false, 0));
-        }
+        foodList = repo.getFoodByPreference(1);
     }
 
     private void setActivityList(){
-        String[] activityPreferences = getResources().getStringArray(R.array.activity);
-
-        for(int i=0; i<activityPreferences.length; i++){
-            activityList.add(new ActivityPreference(1, activityPreferences[i], false, 0));
-        }
+        activityList = repo.getActivityByPreference(1);
     }
+ */
 }

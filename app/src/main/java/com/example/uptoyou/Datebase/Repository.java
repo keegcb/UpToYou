@@ -15,6 +15,8 @@ import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.Entity.Preference;
 import com.example.uptoyou.Entity.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,6 +27,9 @@ public class Repository {
     private final ActivityPreferenceDAO activityPreferenceDAO;
     private final PlaceInfoDAO placeInfoDAO;
     private final HistoryDAO historyDAO;
+
+    private List<FoodPreference> mAllFoodPref;
+    private List<ActivityPreference> mAllActivityPref;
 
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -217,5 +222,31 @@ public class Repository {
         catch(InterruptedException e){
             e.printStackTrace();
         }
+    }
+
+    public List<FoodPreference> getFoodByPreference(int id){
+        databaseExecutor.execute(()->{
+            mAllFoodPref = foodPreferenceDAO.getFoodByPreference(id);
+        });
+        try{
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        return mAllFoodPref;
+    }
+
+    public List<ActivityPreference> getActivityByPreference(int id){
+        databaseExecutor.execute(()->{
+            mAllActivityPref = activityPreferenceDAO.getActivityByPreference(id);
+        });
+        try{
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        return mAllActivityPref;
     }
 }
