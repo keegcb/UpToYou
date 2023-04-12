@@ -9,16 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.uptoyou.Model.FoodPreferenceModel;
+import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.R;
 
 import java.util.ArrayList;
 
 public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAdapter.MyViewHolder> {
     Context context;
-    ArrayList<FoodPreferenceModel> foodList;
+    ArrayList<FoodPreference> foodList;
 
-    public FoodPreferenceAdapter(Context context, ArrayList<FoodPreferenceModel> foodList){
+    public FoodPreferenceAdapter(Context context, ArrayList<FoodPreference> foodList){
         this.context = context;
         this.foodList = foodList;
     }
@@ -31,9 +31,9 @@ public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAd
 
     @Override
     public void onBindViewHolder(@NonNull FoodPreferenceAdapter.MyViewHolder holder, int position) {
-        holder.checkBox.setActivated(foodList.get(position).getFoodDesired());
-        holder.foodName.setText(foodList.get(position).getFoodPreferenceName());
-        holder.foodRank.setText(foodList.get(position).getFoodPreferenceRank());
+        holder.checkBox.setActivated(foodList.get(position).isFoodDesired());
+        holder.foodName.setText(foodList.get(position).getFoodName());
+        holder.foodRank.setText(foodList.get(position).getFoodRank());
     }
 
     @Override
