@@ -2,14 +2,14 @@ package com.example.uptoyou.Datebase;
 
 import android.app.Application;
 
-import com.example.uptoyou.DAO.ActivityRankDAO;
-import com.example.uptoyou.DAO.FoodRankDAO;
+import com.example.uptoyou.DAO.ActivityPreferenceDAO;
+import com.example.uptoyou.DAO.FoodPreferenceDAO;
 import com.example.uptoyou.DAO.HistoryDAO;
 import com.example.uptoyou.DAO.PlaceInfoDAO;
 import com.example.uptoyou.DAO.PreferenceDAO;
 import com.example.uptoyou.DAO.UserDAO;
-import com.example.uptoyou.Entity.ActivityRank;
-import com.example.uptoyou.Entity.FoodRank;
+import com.example.uptoyou.Entity.ActivityPreference;
+import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.Entity.History;
 import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.Entity.Preference;
@@ -21,8 +21,8 @@ import java.util.concurrent.Executors;
 public class Repository {
     private final UserDAO userDAO;
     private final PreferenceDAO preferenceDAO;
-    private final FoodRankDAO foodRankDAO;
-    private final ActivityRankDAO activityRankDAO;
+    private final FoodPreferenceDAO foodPreferenceDAO;
+    private final ActivityPreferenceDAO activityPreferenceDAO;
     private final PlaceInfoDAO placeInfoDAO;
     private final HistoryDAO historyDAO;
 
@@ -33,8 +33,8 @@ public class Repository {
         DatabaseBuilder db = DatabaseBuilder.getDatabase(application);
         userDAO = db.userDAO();
         preferenceDAO = db.preferenceDAO();
-        foodRankDAO = db.foodRankDAO();
-        activityRankDAO = db.activityRankDAO();
+        foodPreferenceDAO = db.foodPreferenceDAO();
+        activityPreferenceDAO = db.activityPreferenceDAO();
         placeInfoDAO = db.placeInfoDAO();
         historyDAO = db.historyDAO();
     }
@@ -99,8 +99,8 @@ public class Repository {
         }
     }
 
-    public void insertFoodRank(FoodRank foodRank){
-        databaseExecutor.execute(()-> foodRankDAO.insertFood(foodRank));
+    public void insertFoodPreference(FoodPreference foodPreference){
+        databaseExecutor.execute(()-> foodPreferenceDAO.insertFood(foodPreference));
         try{
             Thread.sleep(1000);
         }
@@ -109,8 +109,8 @@ public class Repository {
         }
     }
 
-    public void updateFoodRank(FoodRank foodRank){
-        databaseExecutor.execute(()-> foodRankDAO.updateFood(foodRank));
+    public void updateFoodPreference(FoodPreference foodPreference){
+        databaseExecutor.execute(()-> foodPreferenceDAO.updateFood(foodPreference));
         try{
             Thread.sleep(1000);
         }
@@ -119,8 +119,8 @@ public class Repository {
         }
     }
 
-    public void deleteFoodRank(FoodRank foodRank){
-        databaseExecutor.execute(()-> foodRankDAO.deleteFood(foodRank));
+    public void deleteFoodPreference(FoodPreference foodPreference){
+        databaseExecutor.execute(()-> foodPreferenceDAO.deleteFood(foodPreference));
         try{
             Thread.sleep(1000);
         }
@@ -129,8 +129,8 @@ public class Repository {
         }
     }
 
-    public void insertActivityRank(ActivityRank activityRank){
-        databaseExecutor.execute(()-> activityRankDAO.insertActivity(activityRank));
+    public void insertActivityPreference(ActivityPreference activityPreference){
+        databaseExecutor.execute(()-> activityPreferenceDAO.insertActivity(activityPreference));
         try{
             Thread.sleep(1000);
         }
@@ -139,8 +139,8 @@ public class Repository {
         }
     }
 
-    public void updateActivityRank(ActivityRank activityRank){
-        databaseExecutor.execute(()-> activityRankDAO.updateActivity(activityRank));
+    public void updateActivityPreference(ActivityPreference activityPreference){
+        databaseExecutor.execute(()-> activityPreferenceDAO.updateActivity(activityPreference));
         try{
             Thread.sleep(1000);
         }
@@ -149,8 +149,8 @@ public class Repository {
         }
     }
 
-    public void deleteActivityRank(ActivityRank activityRank){
-        databaseExecutor.execute(()-> activityRankDAO.deleteActivity(activityRank));
+    public void deleteActivityPreference(ActivityPreference activityPreference){
+        databaseExecutor.execute(()-> activityPreferenceDAO.deleteActivity(activityPreference));
         try{
             Thread.sleep(1000);
         }

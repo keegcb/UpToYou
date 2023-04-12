@@ -6,16 +6,16 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Update;
 
-import com.example.uptoyou.Entity.ActivityRank;
+import com.example.uptoyou.Entity.FoodPreference;
 
 @Dao
-public interface ActivityRankDAO {
+public interface FoodPreferenceDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertActivity(ActivityRank activityRank);
+    void insertFood(FoodPreference foodPreference);
 
     @Update
-    void updateActivity(ActivityRank activityRank);
+    void updateFood(FoodPreference foodPreference);
 
     @Delete
-    void deleteActivity(ActivityRank activityRank);
+    void deleteFood(FoodPreference foodPreference);
 }
