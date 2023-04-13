@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uptoyou.Entity.ActivityPreference;
+import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.R;
 
 import java.util.ArrayList;
@@ -72,4 +73,5 @@ public class ActivityPreferenceAdapter extends RecyclerView.Adapter<ActivityPref
             activityRank = itemView.findViewById(R.id.txtRank);
         }
     }
+
 }

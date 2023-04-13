@@ -11,8 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uptoyou.Datebase.Repository;
 import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.R;
+import com.example.uptoyou.UI.PreferencesActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,6 @@ public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAd
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 food.setFoodDesired(isChecked);
-
             }
         });
     }

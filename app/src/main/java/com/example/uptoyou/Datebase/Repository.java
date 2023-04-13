@@ -48,7 +48,7 @@ public class Repository {
     public void insertUser(User user){
         databaseExecutor.execute(()-> userDAO.insertUser(user));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -58,7 +58,7 @@ public class Repository {
     public void updateUser(User user){
         databaseExecutor.execute(()-> userDAO.updateUser(user));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class Repository {
     public void deleteUser(User user){
         databaseExecutor.execute(()-> userDAO.deleteUser(user));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -78,7 +78,7 @@ public class Repository {
     public void insertPreference(Preference preference){
         databaseExecutor.execute(()-> preferenceDAO.insertPreference(preference));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -88,7 +88,7 @@ public class Repository {
     public void updatePreference(Preference preference){
         databaseExecutor.execute(()-> preferenceDAO.updatePreference(preference));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -98,7 +98,7 @@ public class Repository {
     public void deletePreference(Preference preference){
         databaseExecutor.execute(()-> preferenceDAO.deletePreference(preference));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -108,7 +108,7 @@ public class Repository {
     public void insertFoodPreference(FoodPreference foodPreference){
         databaseExecutor.execute(()-> foodPreferenceDAO.insertFood(foodPreference));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -118,7 +118,7 @@ public class Repository {
     public void updateFoodPreference(FoodPreference foodPreference){
         databaseExecutor.execute(()-> foodPreferenceDAO.updateFood(foodPreference));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -128,7 +128,7 @@ public class Repository {
     public void deleteFoodPreference(FoodPreference foodPreference){
         databaseExecutor.execute(()-> foodPreferenceDAO.deleteFood(foodPreference));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -138,7 +138,7 @@ public class Repository {
     public void insertActivityPreference(ActivityPreference activityPreference){
         databaseExecutor.execute(()-> activityPreferenceDAO.insertActivity(activityPreference));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -148,7 +148,7 @@ public class Repository {
     public void updateActivityPreference(ActivityPreference activityPreference){
         databaseExecutor.execute(()-> activityPreferenceDAO.updateActivity(activityPreference));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -158,7 +158,7 @@ public class Repository {
     public void deleteActivityPreference(ActivityPreference activityPreference){
         databaseExecutor.execute(()-> activityPreferenceDAO.deleteActivity(activityPreference));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -168,7 +168,7 @@ public class Repository {
     public void insertPlaceInfo(PlaceInfo placeInfo){
         databaseExecutor.execute(()-> placeInfoDAO.insertPlace(placeInfo));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -178,7 +178,7 @@ public class Repository {
     public void updatePlaceInfo(PlaceInfo placeInfo){
         databaseExecutor.execute(()-> placeInfoDAO.updatePlace(placeInfo));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -188,7 +188,7 @@ public class Repository {
     public void deletePlaceInfo(PlaceInfo placeInfo){
         databaseExecutor.execute(()-> placeInfoDAO.deletePlace(placeInfo));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -198,7 +198,7 @@ public class Repository {
     public void insertHistory(History history){
         databaseExecutor.execute(()-> historyDAO.insertHistory(history));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -208,7 +208,7 @@ public class Repository {
     public void updateHistory(History history){
         databaseExecutor.execute(()-> historyDAO.updateHistory(history));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -218,7 +218,7 @@ public class Repository {
     public void deleteHistory(History history){
         databaseExecutor.execute(()-> historyDAO.deleteHistory(history));
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -230,7 +230,7 @@ public class Repository {
             mAllFoodPref = foodPreferenceDAO.getFoodByPreference(id);
         });
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch (InterruptedException e){
             e.printStackTrace();
@@ -243,7 +243,7 @@ public class Repository {
             mAllActivityPref = activityPreferenceDAO.getActivityByPreference(id);
         });
         try{
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch (InterruptedException e){
             e.printStackTrace();
