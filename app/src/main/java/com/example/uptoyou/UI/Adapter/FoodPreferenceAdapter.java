@@ -72,4 +72,5 @@ public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAd
             foodRank = itemView.findViewById(R.id.txtRank);
         }
     }
+
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import java.util.List;
 public class PreferencesActivity extends AppCompatActivity {
     Preference preference;
     Spinner distanceSpinner;
+    Button btnSave;
     List<FoodPreference> foodList;
     List<ActivityPreference> activityList;
 
@@ -73,7 +75,28 @@ public class PreferencesActivity extends AppCompatActivity {
         ActivityPreferenceAdapter activityAdapter = new ActivityPreferenceAdapter(this, activityList);
         activityRecycler.setAdapter(activityAdapter);
         activityRecycler.setLayoutManager(new LinearLayoutManager(this));
+
     }
+
+    private void initSave(){
+        Button btnSave = (Button) findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Repository repo = new Repository(getApplication());
+                repo.updatePreference(preference);
+
+    //TODO: Figure out how to loop through Recycler View
+                for(int i=0; i<foodList.size(); i++){
+                    FoodPreference foodUpdate = foodList.get(i);
+                    repo.updateFoodPreference(foodUpdate);
+                    ActivityPreference activityUpdate = activityList.get(i);
+                    repo.updateActivityPreference(activityUpdate);
+                }
+            }
+        });
+    }
+
 /*
     private void setFoodList(){
         foodList = repo.getFoodByPreference(1);
