@@ -37,7 +37,9 @@ public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAd
 
     @Override
     public void onBindViewHolder(@NonNull FoodPreferenceAdapter.MyViewHolder holder, int position) {
-        final FoodPreference food = foodList.get(position);
+        FoodPreference food = foodList.get(position);
+
+        holder.checkBox.setOnCheckedChangeListener(null);
 
         holder.checkBox.setChecked(food.isFoodDesired());
         holder.foodName.setText(food.getFoodName());
@@ -47,6 +49,7 @@ public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAd
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 food.setFoodDesired(isChecked);
+
             }
         });
     }

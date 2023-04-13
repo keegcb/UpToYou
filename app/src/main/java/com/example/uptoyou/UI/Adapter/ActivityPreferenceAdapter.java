@@ -38,7 +38,9 @@ public class ActivityPreferenceAdapter extends RecyclerView.Adapter<ActivityPref
 
     @Override
     public void onBindViewHolder(@NonNull ActivityPreferenceAdapter.MyViewHolder holder, int position) {
-        final ActivityPreference activity = activityList.get(position);
+        ActivityPreference activity = activityList.get(position);
+
+        holder.checkBox.setOnCheckedChangeListener(null);
 
         holder.checkBox.setChecked(activity.isActivityDesired());
         holder.activityName.setText(activity.getActivityName());

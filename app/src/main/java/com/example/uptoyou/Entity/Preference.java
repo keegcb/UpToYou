@@ -7,14 +7,10 @@ import androidx.room.PrimaryKey;
 public class Preference {
     @PrimaryKey(autoGenerate = false)
     private int preferenceId;
-    private float distance;
-    private int foodId;
-    private int activityId;
+    private int distance;
 
-    public Preference(float distance, int foodId, int activityId) {
+    public Preference(int distance) {
         this.distance = distance;
-        this.foodId = foodId;
-        this.activityId = activityId;
     }
 
     public int getPreferenceId() {
@@ -25,27 +21,12 @@ public class Preference {
         this.preferenceId = preferenceId;
     }
 
-    public float getDistance() {
+    public int getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(int distance) {
         this.distance = distance;
     }
 
-    public int getFoodId() {
-        return foodId;
-    }
-
-    public void setFoodId(int foodId) {
-        this.foodId = foodId;
-    }
-
-    public int getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(int activityId) {
-        this.activityId = activityId;
-    }
 }

@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         Repository repo = new Repository(getApplication());
 
         User user = new User("user", 1, 42.33461099979685, -83.0465496496764);
-        Preference preference = new Preference(20, 1, 1);
+        Preference preference = new Preference(20);
         preference.setPreferenceId(1);
 
         //Food Preference Settings
