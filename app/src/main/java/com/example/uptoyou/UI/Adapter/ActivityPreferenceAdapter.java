@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,9 +38,18 @@ public class ActivityPreferenceAdapter extends RecyclerView.Adapter<ActivityPref
 
     @Override
     public void onBindViewHolder(@NonNull ActivityPreferenceAdapter.MyViewHolder holder, int position) {
-        holder.checkBox.setActivated(activityList.get(position).isActivityDesired());
-        holder.activityName.setText(activityList.get(position).getActivityName());
-        holder.activityRank.setText(Integer.toString(activityList.get(position).getActivityRank()));
+        final ActivityPreference activity = activityList.get(position);
+
+        holder.checkBox.setChecked(activity.isActivityDesired());
+        holder.activityName.setText(activity.getActivityName());
+        holder.activityRank.setText(Integer.toString(activity.getActivityRank()));
+
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked){
+                activity.setActivityDesired(isChecked);
+            }
+        });
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,9 +37,18 @@ public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAd
 
     @Override
     public void onBindViewHolder(@NonNull FoodPreferenceAdapter.MyViewHolder holder, int position) {
-        holder.checkBox.setActivated(foodList.get(position).isFoodDesired());
-        holder.foodName.setText(foodList.get(position).getFoodName());
-        holder.foodRank.setText(Integer.toString(foodList.get(position).getFoodRank()));
+        final FoodPreference food = foodList.get(position);
+
+        holder.checkBox.setChecked(food.isFoodDesired());
+        holder.foodName.setText(food.getFoodName());
+        holder.foodRank.setText(Integer.toString(food.getFoodRank()));
+
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                food.setFoodDesired(isChecked);
+            }
+        });
     }
 
     @Override
