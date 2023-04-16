@@ -22,6 +22,7 @@ import java.util.List;
 public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAdapter.MyViewHolder> {
     Context context;
     List<FoodPreference> foodList;
+    List<FoodPreference> foods;
 
     public FoodPreferenceAdapter(Context context, List<FoodPreference> foodList){
         this.context = context;
@@ -40,6 +41,7 @@ public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAd
     @Override
     public void onBindViewHolder(@NonNull FoodPreferenceAdapter.MyViewHolder holder, int position) {
         FoodPreference food = foodList.get(position);
+        int tPosition = position;
 
         holder.checkBox.setOnCheckedChangeListener(null);
 
@@ -51,6 +53,7 @@ public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAd
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 food.setFoodDesired(isChecked);
+                foodList.set(tPosition, food);
             }
         });
     }
@@ -72,6 +75,26 @@ public class FoodPreferenceAdapter extends RecyclerView.Adapter<FoodPreferenceAd
             foodName = itemView.findViewById(R.id.txtPreferenceName);
             foodRank = itemView.findViewById(R.id.txtRank);
         }
+    }
+
+    public List<FoodPreference> getSelected(){
+        List<FoodPreference> selected = new ArrayList<FoodPreference>();
+        for(int i=0; i<foodList.size(); i++){
+            if(foodList.get(i).isFoodDesired()){
+                selected.add(foodList.get(i));
+            }
+        }
+        return selected;
+    }
+
+    public List<FoodPreference> getUnselected(){
+        List<FoodPreference> unselected = new ArrayList<FoodPreference>();
+        for(int i=0; i<foodList.size(); i++){
+            if(!foodList.get(i).isFoodDesired()){
+                unselected.add(foodList.get(i));
+            }
+        }
+        return unselected;
     }
 
 }

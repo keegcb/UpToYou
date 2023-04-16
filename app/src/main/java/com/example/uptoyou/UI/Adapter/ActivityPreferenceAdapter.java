@@ -40,6 +40,7 @@ public class ActivityPreferenceAdapter extends RecyclerView.Adapter<ActivityPref
     @Override
     public void onBindViewHolder(@NonNull ActivityPreferenceAdapter.MyViewHolder holder, int position) {
         ActivityPreference activity = activityList.get(position);
+        int tPosition = position;
 
         holder.checkBox.setOnCheckedChangeListener(null);
 
@@ -51,6 +52,7 @@ public class ActivityPreferenceAdapter extends RecyclerView.Adapter<ActivityPref
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked){
                 activity.setActivityDesired(isChecked);
+                activityList.set(tPosition, activity);
             }
         });
     }
@@ -72,6 +74,26 @@ public class ActivityPreferenceAdapter extends RecyclerView.Adapter<ActivityPref
             activityName = itemView.findViewById(R.id.txtPreferenceName);
             activityRank = itemView.findViewById(R.id.txtRank);
         }
+    }
+
+    public List<ActivityPreference> getSelected(){
+        List<ActivityPreference> selected = new ArrayList<>();
+        for(int i=0; i<activityList.size(); i++){
+            if(activityList.get(i).isActivityDesired()){
+                selected.add(activityList.get(i));
+            }
+        }
+        return selected;
+    }
+
+    public List<ActivityPreference> getUnselected(){
+        List<ActivityPreference> unselected = new ArrayList<>();
+        for(int i=0; i<activityList.size(); i++){
+            if(!activityList.get(i).isActivityDesired()){
+                unselected.add(activityList.get(i));
+            }
+        }
+        return unselected;
     }
 
 }

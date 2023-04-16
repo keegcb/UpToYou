@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "FoodPreference")
 public class FoodPreference {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     private int foodId;
     private int preferenceId;
 
@@ -13,8 +13,9 @@ public class FoodPreference {
     private boolean foodDesired;
     private int foodRank;
 
-    public FoodPreference(int preferenceId, String foodName, boolean foodDesired, int foodRank) {
+    public FoodPreference(int preferenceId, int foodId, String foodName, boolean foodDesired, int foodRank) {
         this.preferenceId = preferenceId;
+        this.foodId = foodId;
         this.foodName = foodName;
         this.foodDesired = foodDesired;
         this.foodRank = foodRank;

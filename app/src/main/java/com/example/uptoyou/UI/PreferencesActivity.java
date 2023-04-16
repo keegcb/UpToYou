@@ -29,7 +29,6 @@ import java.util.Objects;
 public class PreferencesActivity extends AppCompatActivity {
     Preference preference;
     Spinner distanceSpinner;
-    Button btnSave;
     List<FoodPreference> foodList;
     List<ActivityPreference> activityList;
     RecyclerView foodRecycler;
@@ -81,48 +80,39 @@ public class PreferencesActivity extends AppCompatActivity {
         activityRecycler.setAdapter(activityAdapter);
         activityRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        initSave();
-    }
-
-    private void initSave() {
         Button btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Repository repo = new Repository(getApplication());
-                repo.updatePreference(preference);
+                List<FoodPreference> foodSelected = foodAdapter.getSelected();
+                List<FoodPreference> foodUnselected = foodAdapter.getUnselected();
+                List<ActivityPreference> activitySelected = activityAdapter.getSelected();
+                List<ActivityPreference> activityUnselected = activityAdapter.getUnselected();
+                int pId = preference.getPreferenceId();
 
-                for(int i=0; i<foodRecycler.getChildCount(); i++){
-                    CheckBox check = Objects.requireNonNull(foodRecycler.findViewHolderForAdapterPosition(i)).itemView.findViewById(R.id.checkboxPreference);
-                    TextView txtName = Objects.requireNonNull(foodRecycler.findViewHolderForAdapterPosition(i)).itemView.findViewById(R.id.txtPreferenceName);
-                    TextView txtRank = Objects.requireNonNull(foodRecycler.findViewHolderForAdapterPosition(i)).itemView.findViewById(R.id.txtRank);
-
-                    int pId = preference.getPreferenceId();
-                    boolean desired = check.isChecked();
-                    String name = (String) txtName.getText();
-                    String rank = (String) txtRank.getText();
-
-                    FoodPreference updateFood = new FoodPreference(pId, name, desired, Integer.parseInt(rank));
-                    updateFood.setFoodId(i+1);
-                    repo.updateFoodPreference(updateFood);
+                //Update selected and unselected Food Preferences from list in DB
+                for(int i=0; i<foodSelected.size(); i++){
+                    FoodPreference food = new FoodPreference(pId, foodSelected.get(i).getFoodId(), foodSelected.get(i).getFoodName(), foodSelected.get(i).isFoodDesired(), foodSelected.get(i).getFoodRank());
+                    repo.updateFoodPreference(food);
                 }
-                for(int i=0; i<activityRecycler.getChildCount(); i++){
-                    CheckBox check = Objects.requireNonNull(activityRecycler.findViewHolderForAdapterPosition(i)).itemView.findViewById(R.id.checkboxPreference);
-                    TextView txtName = Objects.requireNonNull(activityRecycler.findViewHolderForAdapterPosition(i)).itemView.findViewById(R.id.txtPreferenceName);
-                    TextView txtRank = Objects.requireNonNull(activityRecycler.findViewHolderForAdapterPosition(i)).itemView.findViewById(R.id.txtRank);
-
-                    int pId = preference.getPreferenceId();
-                    boolean desired = check.isChecked();
-                    String name = (String) txtName.getText();
-                    String rank = (String) txtRank.getText();
-
-                    ActivityPreference updateActivity = new ActivityPreference(pId, name, desired, Integer.parseInt(rank));
-                    updateActivity.setActivityId(i+1);
-                    repo.updateActivityPreference(updateActivity);
+                for(int i=0; i<foodUnselected.size(); i++){
+                    FoodPreference food = new FoodPreference(pId, foodUnselected.get(i).getFoodId(), foodUnselected.get(i).getFoodName(), foodUnselected.get(i).isFoodDesired(), foodUnselected.get(i).getFoodRank());
+                    repo.updateFoodPreference(food);
                 }
+                //Update selected and unselected Activity Preferences from list in DB
+                for(int i=0; i<activitySelected.size(); i++){
+                    ActivityPreference actvitiy = new ActivityPreference(pId, activitySelected.get(i).getActivityId(), activitySelected.get(i).getActivityName(), activitySelected.get(i).isActivityDesired(),activitySelected.get(i).getActivityRank());
+                    repo.updateActivityPreference(actvitiy);
+                }
+                for(int i=0; i<activityUnselected.size(); i++){
+                    ActivityPreference actvitiy = new ActivityPreference(pId, activityUnselected.get(i).getActivityId(), activityUnselected.get(i).getActivityName(), activityUnselected.get(i).isActivityDesired(), activityUnselected.get(i).getActivityRank());
+                    repo.updateActivityPreference(actvitiy);
+                }
+
                 finish();
             }
         });
+
     }
 
 }

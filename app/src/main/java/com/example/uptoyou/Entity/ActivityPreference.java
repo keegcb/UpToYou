@@ -13,8 +13,9 @@ public class ActivityPreference {
     private boolean activityDesired;
     private int activityRank;
 
-    public ActivityPreference(int preferenceId, String activityName, boolean activityDesired, int activityRank){
+    public ActivityPreference(int preferenceId, int activityId, String activityName, boolean activityDesired, int activityRank){
         this.preferenceId = preferenceId;
+        this.activityId = activityId;
         this.activityName = activityName;
         this.activityDesired = activityDesired;
         this.activityRank = activityRank;
