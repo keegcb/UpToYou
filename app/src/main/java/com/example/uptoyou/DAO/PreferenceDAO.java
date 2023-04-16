@@ -22,4 +22,5 @@ public interface PreferenceDAO {
 
     @Query("SELECT * FROM Preference WHERE preferenceId= :id")
     Preference getPreference(int id);
+
 }

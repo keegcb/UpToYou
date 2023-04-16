@@ -31,6 +31,7 @@ public class Repository {
     private List<FoodPreference> mAllFoodPref;
     private List<ActivityPreference> mAllActivityPref;
     private Preference mPreference;
+    private List<User> mUser;
 
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -262,5 +263,18 @@ public class Repository {
             e.printStackTrace();
         }
         return mPreference;
+    }
+
+    public  List<User> userExists(int id) {
+        databaseExecutor.execute(()->{
+            mUser = userDAO.getUsers(id);
+        });
+        try{
+            Thread.sleep(100);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        return mUser;
     }
 }
