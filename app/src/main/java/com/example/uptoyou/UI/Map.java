@@ -22,9 +22,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.model.Place;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class Map extends AppCompatActivity implements OnMapReadyCallback{
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -76,7 +75,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                         else{
                             Log.d(TAG, "onComplete: Current location is null");
-                            Toast.makeText(MapActivity.this, "Unable to find current location.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Map.this, "Unable to find current location.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -95,7 +94,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d(TAG, "initMap: Initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
-        mapFragment.getMapAsync(MapActivity.this);
+        mapFragment.getMapAsync(Map.this);
     }
 
     private void getLocationPermission(){

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class PreferencesActivity extends AppCompatActivity {
+public class Preferences extends AppCompatActivity {
     Preference preference;
     Spinner distanceSpinner;
     List<FoodPreference> foodList;

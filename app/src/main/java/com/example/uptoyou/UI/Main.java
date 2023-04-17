@@ -21,7 +21,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class Main extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         if(correctServices()){
             initMap();
             initSettings();
+            initFood();
         }
     }
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                Intent intent = new Intent(Main.this, Map.class);
                 startActivity(intent);
             }
         });
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean correctServices(){
         Log.d(TAG, "correctServices: checking google services version");
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(Main.this);
 
         if(available == ConnectionResult.SUCCESS){
             //correct services are installed and users can make map requests
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)){
             //error occurred but is fixable
             Log.d(TAG, "correctServices: an error occurred but it can be fixed");
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(Main.this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
         }
         else{
@@ -79,7 +80,18 @@ public class MainActivity extends AppCompatActivity {
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
+                Intent intent = new Intent(Main.this, Preferences.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initFood(){
+        Button btnFood = (Button) findViewById(R.id.btnFood);
+        btnFood.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Main.this, FoodChoice.class);
                 startActivity(intent);
             }
         });
