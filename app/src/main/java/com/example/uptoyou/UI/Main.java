@@ -23,6 +23,8 @@ import java.util.List;
 
 public class Main extends AppCompatActivity {
 
+    static List<FoodPreference> selectedFoodPres;
+    static List<ActivityPreference> selectedActivityPres;
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
@@ -91,7 +93,38 @@ public class Main extends AppCompatActivity {
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Main.this, FoodChoice.class);
+                Intent intent = new Intent(Main.this, PlaceChoice.class);
+                Bundle b = new Bundle();
+                b.putInt("key", 1);
+                intent.putExtras(b);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initActivity(){
+        Button btnFood = (Button) findViewById(R.id.btnActivity);
+        btnFood.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Main.this, PlaceChoice.class);
+                Bundle b = new Bundle();
+                b.putInt("key", 2);
+                intent.putExtras(b);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initRandom(){
+        Button btnFood = (Button) findViewById(R.id.btnRandom);
+        btnFood.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Main.this, PlaceChoice.class);
+                Bundle b = new Bundle();
+                b.putInt("key", 3);
+                intent.putExtras(b);
                 startActivity(intent);
             }
         });

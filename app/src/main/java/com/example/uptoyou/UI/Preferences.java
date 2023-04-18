@@ -109,6 +109,9 @@ public class Preferences extends AppCompatActivity {
                     repo.updateActivityPreference(actvitiy);
                 }
 
+                Main.selectedFoodPres = foodSelected;
+                Main.selectedActivityPres = activitySelected;
+
                 finish();
             }
         });
