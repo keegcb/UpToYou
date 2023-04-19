@@ -25,4 +25,8 @@ public interface FoodPreferenceDAO {
 
     @Query("SELECT * FROM FoodPreference WHERE preferenceId= :id")
     List<FoodPreference> getFoodByPreference(int id);
+
+    @Query("SELECT * FROM FoodPreference WHERE foodDesired= :desired")
+    List<FoodPreference> getFoodDesired(boolean desired);
+
 }

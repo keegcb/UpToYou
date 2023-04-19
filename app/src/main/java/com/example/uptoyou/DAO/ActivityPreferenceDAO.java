@@ -25,4 +25,7 @@ public interface ActivityPreferenceDAO {
 
     @Query("SELECT * FROM ActivityPreference WHERE preferenceId= :id")
     List<ActivityPreference> getActivityByPreference(int id);
+
+    @Query("SELECT * FROM ActivityPreference WHERE activityDesired= :desired")
+    List<ActivityPreference> getActivityDesired(boolean desired);
 }

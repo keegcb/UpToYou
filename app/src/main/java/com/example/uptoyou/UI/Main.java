@@ -23,8 +23,6 @@ import java.util.List;
 
 public class Main extends AppCompatActivity {
 
-    static List<FoodPreference> selectedFoodPres;
-    static List<ActivityPreference> selectedActivityPres;
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
