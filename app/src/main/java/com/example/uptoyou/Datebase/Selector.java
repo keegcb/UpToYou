@@ -13,6 +13,16 @@ public class Selector {
     public String foodSelection(List<FoodPreference> foodPrefs){
         String search = "";
 
+        /*
+        selection should be prioritized
+
+        selection should be weighted
+
+        selection should be semi-random proceeding the first two requirements
+
+        selection should weight items based on previous history
+	        history needs to be queried for each selection?
+         */
 
         return search;
     }
