@@ -90,6 +90,9 @@ public class Preferences extends AppCompatActivity {
                 List<ActivityPreference> activityUnselected = activityAdapter.getUnselected();
                 int pId = preference.getPreferenceId();
 
+                String distance = distanceSpinner.getSelectedItem().toString();
+                preference.setDistance(Integer.parseInt(distance));
+                repo.updatePreference(preference);
                 //Update selected and unselected Food Preferences from list in DB
                 for(int i=0; i<foodSelected.size(); i++){
                     FoodPreference food = new FoodPreference(pId, foodSelected.get(i).getFoodId(), foodSelected.get(i).getFoodName(), foodSelected.get(i).isFoodDesired(), foodSelected.get(i).getFoodRank());
