@@ -50,6 +50,7 @@ public class PlaceChoice extends AppCompatActivity {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private boolean mLocationPermissionsGranted = false;
     private static final String TAG = "PlaceChoiceActivity";
+    private static int choiceIndicatorId;
     private LatLng currentLatLng;
 
     private Selector select = new Selector();
@@ -81,23 +82,28 @@ public class PlaceChoice extends AppCompatActivity {
                 Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES);
 
         switch (id){
-            case 1: foodDesired = repo.getFoodDesired(true);
+            case 1:
+                choiceIndicatorId = 1;
+                foodDesired = repo.getFoodDesired(true);
                 for(int i=0; i<2; i++){
                     search = select.foodSelection(foodDesired);
-                    PlaceInfo place = placeSearchResult(search, "restaurant", 1);
-                    placeOptions.add(place);
+                    placeSearchResult(search, "restaurant", 1);
                 }
                 //Add Place Detail search logic for place selection
                 break;
-            case 2: activityDesired = repo.getmActivityDesired(true);
+            case 2:
+                choiceIndicatorId = 2;
+                activityDesired = repo.getmActivityDesired(true);
                 search = select.activitySelector(activityDesired);
                 //Add Place Detail search logic for place selection
                 break;
             case 3:
+                choiceIndicatorId = 3;
                 foodDesired = repo.getFoodDesired(true);
                 activityDesired = repo.getmActivityDesired(true);
                 search = select.randomSelector(foodDesired, activityDesired);
                 //Add Place Detail search logic for place selection
+                break;
             default: Log.e("identifySelector", "no case");
         }
     }
@@ -115,7 +121,7 @@ public class PlaceChoice extends AppCompatActivity {
         70.71 miles to corner of Square Bounds
      */
 
-    private PlaceInfo placeSearchResult(String query, String type, int id){
+    private void placeSearchResult(String query, String type, int id){
         AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
         PlaceInfo placeResult;
         Double distance;
@@ -140,11 +146,6 @@ public class PlaceChoice extends AppCompatActivity {
         RectangularBounds bounds = RectangularBounds.newInstance(
                 new LatLng((currentLatLng.latitude + distance), (currentLatLng.longitude + distance)),
                 new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)));
-/*
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,
-                Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES);
-
- */
 
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 .setLocationRestriction(bounds)
@@ -192,13 +193,13 @@ public class PlaceChoice extends AppCompatActivity {
             if (exception instanceof ApiException) {
                 ApiException apiException = (ApiException) exception;
                 Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-
+                rerollPlaceSearch();
                 //Re-roll the autocomplete prediction with new search criteria.
             }
         });
 
 
-        return placeResult;
+        placeOptions.add(placeResult);
     }
 
     private void getDeviceLocation(){
@@ -245,6 +246,21 @@ public class PlaceChoice extends AppCompatActivity {
     }
 
     private void rerollPlaceSearch(){
+        Repository repo = new Repository(getApplication());
+        String search = "";
+        if (choiceIndicatorId == 1){
+            foodDesired = repo.getFoodDesired(true);
+            search = select.foodSelection(foodDesired);
+            placeSearchResult(search, "restaurant", 1);
+        }
+        else if (choiceIndicatorId == 2){
 
+        }
+        else if (choiceIndicatorId == 3){
+
+        }
+        else {
+            Log.d(TAG, "rerollPlaceSearch: Unknown search type on reroll");
+        }
     }
 }
