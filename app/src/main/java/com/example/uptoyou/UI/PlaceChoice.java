@@ -346,7 +346,6 @@ public class PlaceChoice extends AppCompatActivity {
             PlaceInfo placeInfo = new PlaceInfo(place.getName(), place.getAddress(), place.getPhoneNumber(),
                     place.getWebsiteUri().toString(), place.getLatLng().latitude, place.getLatLng().longitude);
             placeInfo.setPlaceId(Integer.parseInt(place.getId()));
-            placeInfo.setType(place.getTypes());\
             placeOptions.add(placeInfo);
         }).addOnFailureListener((exception) -> {
             if(exception instanceof ApiException){

@@ -20,10 +20,10 @@ public class PlaceInfo {
     private String websiteUri;
     private double lat;
     private double lng;
-    private List<Place.Type> type;
+    private String type;
 
 
-    public PlaceInfo(String placeName, String address, String phoneNumber, String websiteUri, double lat, double lng{
+    public PlaceInfo(String placeName, String address, String phoneNumber, String websiteUri, double lat, double lng){
         this.placeName = placeName;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -72,11 +72,11 @@ public class PlaceInfo {
         this.websiteUri = websiteUri;
     }
 
-    public List<Place.Type> getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(List<Place.Type> type) {
+    public void setType(String type) {
         this.type = type;
     }
 
