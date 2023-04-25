@@ -58,7 +58,6 @@ public class PlaceChoice extends AppCompatActivity {
     private LatLng currentLatLng;
     private PlacesClient client;
     private List<AutocompletePrediction> autoPredictions;
-    private List<String> placeIds;
 
     private Selector select = new Selector();
 
@@ -77,6 +76,9 @@ public class PlaceChoice extends AppCompatActivity {
         if(b != null){
             value = b.getInt("key");
             identifySelector(value);
+            if(!placeOptions.isEmpty()){
+                //Populate recycler view with place options
+            }
         } else {
             finish();
         }
@@ -114,14 +116,154 @@ public class PlaceChoice extends AppCompatActivity {
                 break;
             default: Log.e("identifySelector", "no case");
         }
-        if(!placeIds.isEmpty()){
-            for(int i=0; i<placeIds.size(); i++){
-                convertPlace(placeIds.get(i));
-            }
-        }
     }
 
     //TODO: Is this the proper way to set up an autocomplete PlacesClient object before using it?
+
+    //LatLng Distances in Double format
+    /*
+    Double 0.07237 = 5 miles
+        7.071 miles to corner of Square Bounds
+    Double 0.14474 = 10 miles
+        14.143 miles to corner of Square Bounds
+    Double 0.28949 = 20 miles
+        28.287 miles to corner of Square Bounds
+    Double 0.3618 = 25 miles
+        35.35 miles to corner of Square Bounds
+    Double 0.7237 = 50 miles
+        70.71 miles to corner of Square Bounds
+     */
+    private void placeSearchResult(String query, String type, int id){
+        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+        PlaceInfo placeResult;
+        Double distance;
+        Repository repo = new Repository(getApplication());
+        Preference mPref = repo.getPreferenceById(1);
+        int prefDistance = mPref.getDistance();
+        switch (prefDistance){
+            case 5: distance = 0.036185;
+                break;
+            case 10: distance = 0.07237;
+                break;
+            case 20: distance = 0.14474;
+                break;
+            case 50: distance = 0.3618;
+                break;
+            default: distance = 0.1809;
+        }
+        getLocationPermission();
+        getDeviceLocation();
+        RectangularBounds bounds = RectangularBounds.newInstance(
+                new LatLng((currentLatLng.latitude + distance), (currentLatLng.longitude + distance)),
+                new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)));
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                .setLocationRestriction(bounds)
+                .setOrigin(currentLatLng)
+                .setTypesFilter(Arrays.asList(type))
+                .setSessionToken(token)
+                .setQuery(query)
+                .build();
+        client.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
+            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                Log.i(TAG, prediction.getPlaceId());
+                Log.i(TAG, prediction.getPrimaryText(null).toString());
+                autoPredictions.add(prediction);
+            }
+            AutocompletePrediction selectedPrediction = select.selectPrediction(autoPredictions);
+            convertPlace(selectedPrediction.getPlaceId(),type);
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                redoPlaceSearch();
+            }
+        });
+    }
+
+    private void convertPlace(String placeId, String type) {
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,
+                Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES);
+        FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(placeId, fields);
+        client.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
+            Place place = response.getPlace();
+            Log.i(TAG, "Place found: " + place.getName());
+            //convert place details into place info object
+            PlaceInfo placeInfo = new PlaceInfo(place.getName(), place.getAddress(), place.getPhoneNumber(),
+                    place.getWebsiteUri().toString(), place.getLatLng().latitude, place.getLatLng().longitude);
+            placeInfo.setPlaceId(Integer.parseInt(place.getId()));
+            placeInfo.setType(type);
+            placeOptions.add(placeInfo);
+        }).addOnFailureListener((exception) -> {
+            if(exception instanceof ApiException){
+                final ApiException apiException = (ApiException) exception;
+                Log.e(TAG, "Place not found: " + exception.getMessage());
+                final int statusCode = apiException.getStatusCode();
+            }
+        });
+    }
+
+    private void getDeviceLocation(){
+        Log.d(TAG, "getDeviceLocation: Getting the devices current location.");
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        try {
+            if (mLocationPermissionsGranted) {
+                final Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: Current location found.");
+                            Location currentLocation = (Location) task.getResult();
+                            currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            Log.d(TAG, "Lat: " + currentLocation.getLatitude() + ", Lng: " + currentLocation.getLongitude());
+                        }
+                        else{
+                            Log.d(TAG, "onComplete: Current location is null");
+                            Toast.makeText(PlaceChoice.this, "Unable to find current location.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e){
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
+        }
+    }
+
+    private void getLocationPermission(){
+        Log.d(TAG, "getLocationPermission: Getting location permissions");
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(this.getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                mLocationPermissionsGranted = true;
+            }
+            else {
+                ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }
+        else {
+            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void redoPlaceSearch(){
+        Repository repo = new Repository(getApplication());
+        String search = "";
+        if (choiceIndicatorId == 1){
+            foodDesired = repo.getFoodDesired(true);
+            search = select.foodSelection(foodDesired);
+            placeSearchResult(search, "restaurant", 1);
+        }
+        else if (choiceIndicatorId == 2){
+
+        }
+        else if (choiceIndicatorId == 3){
+
+        }
+        else {
+            Log.d(TAG, "redoPlaceSearch: Unknown search type on reroll");
+        }
+    }
+
     private void initPlacesClient(){
         client = new PlacesClient() {
             @NonNull
@@ -273,148 +415,5 @@ public class PlaceChoice extends AppCompatActivity {
                 return null;
             }
         };
-    }
-
-    //LatLng Distances in Double format
-    /*
-    Double 0.07237 = 5 miles
-        7.071 miles to corner of Square Bounds
-    Double 0.14474 = 10 miles
-        14.143 miles to corner of Square Bounds
-    Double 0.28949 = 20 miles
-        28.287 miles to corner of Square Bounds
-    Double 0.3618 = 25 miles
-        35.35 miles to corner of Square Bounds
-    Double 0.7237 = 50 miles
-        70.71 miles to corner of Square Bounds
-     */
-    private void placeSearchResult(String query, String type, int id){
-        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-        PlaceInfo placeResult;
-        Double distance;
-        Repository repo = new Repository(getApplication());
-        Preference mPref = repo.getPreferenceById(1);
-        int prefDistance = mPref.getDistance();
-        switch (prefDistance){
-            case 5: distance = 0.036185;
-                break;
-            case 10: distance = 0.07237;
-                break;
-            case 20: distance = 0.14474;
-                break;
-            case 50: distance = 0.3618;
-                break;
-            default: distance = 0.1809;
-        }
-        getLocationPermission();
-        getDeviceLocation();
-        RectangularBounds bounds = RectangularBounds.newInstance(
-                new LatLng((currentLatLng.latitude + distance), (currentLatLng.longitude + distance)),
-                new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)));
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                .setLocationRestriction(bounds)
-                .setOrigin(currentLatLng)
-                .setTypesFilter(Arrays.asList(type))
-                .setSessionToken(token)
-                .setQuery(query)
-                .build();
-        client.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
-            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                Log.i(TAG, prediction.getPlaceId());
-                Log.i(TAG, prediction.getPrimaryText(null).toString());
-                autoPredictions.add(prediction);
-            }
-            AutocompletePrediction selectedPrediction = select.selectPrediction(autoPredictions);
-            placeIds.add(selectedPrediction.getPlaceId());
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                ApiException apiException = (ApiException) exception;
-                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-                redoPlaceSearch();
-            }
-        });
-    }
-
-    private void convertPlace(String placeId) {
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,
-                Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES);
-        FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(placeId, fields);
-        client.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
-            Place place = response.getPlace();
-            Log.i(TAG, "Place found: " + place.getName());
-            //convert place details into place info object
-            PlaceInfo placeInfo = new PlaceInfo(place.getName(), place.getAddress(), place.getPhoneNumber(),
-                    place.getWebsiteUri().toString(), place.getLatLng().latitude, place.getLatLng().longitude);
-            placeInfo.setPlaceId(Integer.parseInt(place.getId()));
-            placeOptions.add(placeInfo);
-        }).addOnFailureListener((exception) -> {
-            if(exception instanceof ApiException){
-                final ApiException apiException = (ApiException) exception;
-                Log.e(TAG, "Place not found: " + exception.getMessage());
-                final int statusCode = apiException.getStatusCode();
-            }
-        });
-    }
-
-    private void getDeviceLocation(){
-        Log.d(TAG, "getDeviceLocation: Getting the devices current location.");
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        try {
-            if (mLocationPermissionsGranted) {
-                final Task location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: Current location found.");
-                            Location currentLocation = (Location) task.getResult();
-                            currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            Log.d(TAG, "Lat: " + currentLocation.getLatitude() + ", Lng: " + currentLocation.getLongitude());
-                        }
-                        else{
-                            Log.d(TAG, "onComplete: Current location is null");
-                            Toast.makeText(PlaceChoice.this, "Unable to find current location.", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        } catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
-        }
-    }
-
-    private void getLocationPermission(){
-        Log.d(TAG, "getLocationPermission: Getting location permissions");
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                mLocationPermissionsGranted = true;
-            }
-            else {
-                ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            }
-        }
-        else {
-            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    private void redoPlaceSearch(){
-        Repository repo = new Repository(getApplication());
-        String search = "";
-        if (choiceIndicatorId == 1){
-            foodDesired = repo.getFoodDesired(true);
-            search = select.foodSelection(foodDesired);
-            placeSearchResult(search, "restaurant", 1);
-        }
-        else if (choiceIndicatorId == 2){
-
-        }
-        else if (choiceIndicatorId == 3){
-
-        }
-        else {
-            Log.d(TAG, "redoPlaceSearch: Unknown search type on reroll");
-        }
     }
 }
