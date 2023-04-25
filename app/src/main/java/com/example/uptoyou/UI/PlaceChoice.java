@@ -1,6 +1,7 @@
 package com.example.uptoyou.UI;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -40,7 +41,10 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class PlaceChoice extends AppCompatActivity {
     private List<FoodPreference> foodDesired;
@@ -52,6 +56,9 @@ public class PlaceChoice extends AppCompatActivity {
     private static final String TAG = "PlaceChoiceActivity";
     private static int choiceIndicatorId;
     private LatLng currentLatLng;
+    private PlacesClient client;
+    private List<AutocompletePrediction> autoPredictions;
+    private List<String> placeIds;
 
     private Selector select = new Selector();
 
@@ -63,7 +70,8 @@ public class PlaceChoice extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_choice);
-
+        initPlacesClient();
+        initAutoPredictionsList();
         Bundle b = getIntent().getExtras();
         int value; // or other values
         if(b != null){
@@ -106,58 +114,16 @@ public class PlaceChoice extends AppCompatActivity {
                 break;
             default: Log.e("identifySelector", "no case");
         }
+        if(!placeIds.isEmpty()){
+            for(int i=0; i<placeIds.size(); i++){
+                convertPlace(placeIds.get(i));
+            }
+        }
     }
 
-    /*
-    Double 0.07237 = 5 miles
-        7.071 miles to corner of Square Bounds
-    Double 0.14474 = 10 miles
-        14.143 miles to corner of Square Bounds
-    Double 0.28949 = 20 miles
-        28.287 miles to corner of Square Bounds
-    Double 0.3618 = 25 miles
-        35.35 miles to corner of Square Bounds
-    Double 0.7237 = 50 miles
-        70.71 miles to corner of Square Bounds
-     */
-
-    private void placeSearchResult(String query, String type, int id){
-        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-        PlaceInfo placeResult;
-        Double distance;
-        Repository repo = new Repository(getApplication());
-        Preference mPref = repo.getPreferenceById(1);
-        int prefDistance = mPref.getDistance();
-        switch (prefDistance){
-            case 5: distance = 0.036185;
-                break;
-            case 10: distance = 0.07237;
-                break;
-            case 20: distance = 0.14474;
-                break;
-            case 50: distance = 0.3618;
-                break;
-            default: distance = 0.1809;
-        }
-
-        getLocationPermission();
-        getDeviceLocation();
-
-        RectangularBounds bounds = RectangularBounds.newInstance(
-                new LatLng((currentLatLng.latitude + distance), (currentLatLng.longitude + distance)),
-                new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)));
-
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                .setLocationRestriction(bounds)
-                .setOrigin(currentLatLng)
-                .setTypesFilter(Arrays.asList(type))
-                .setSessionToken(token)
-                .setQuery(query)
-                .build();
-
-
-//TODO: Is this the proper way to set up an autocomplete PlacesClient object before using it?
-        PlacesClient client = new PlacesClient() {
+    //TODO: Is this the proper way to set up an autocomplete PlacesClient object before using it?
+    private void initPlacesClient(){
+        client = new PlacesClient() {
             @NonNull
             @Override
             public Task<FetchPhotoResponse> fetchPhoto(@NonNull FetchPhotoRequest fetchPhotoRequest) {
@@ -182,24 +148,213 @@ public class PlaceChoice extends AppCompatActivity {
                 return null;
             }
         };
+    }
 
+    private void initAutoPredictionsList(){
+        autoPredictions = new List<AutocompletePrediction>() {
+            @Override
+            public int size() {
+                return 0;
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+
+            @Override
+            public boolean contains(@Nullable Object o) {
+                return false;
+            }
+
+            @NonNull
+            @Override
+            public Iterator<AutocompletePrediction> iterator() {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public Object[] toArray() {
+                return new Object[0];
+            }
+
+            @NonNull
+            @Override
+            public <T> T[] toArray(@NonNull T[] ts) {
+                return null;
+            }
+
+            @Override
+            public boolean add(AutocompletePrediction autocompletePrediction) {
+                return false;
+            }
+
+            @Override
+            public boolean remove(@Nullable Object o) {
+                return false;
+            }
+
+            @Override
+            public boolean containsAll(@NonNull Collection<?> collection) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(@NonNull Collection<? extends AutocompletePrediction> collection) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(int i, @NonNull Collection<? extends AutocompletePrediction> collection) {
+                return false;
+            }
+
+            @Override
+            public boolean removeAll(@NonNull Collection<?> collection) {
+                return false;
+            }
+
+            @Override
+            public boolean retainAll(@NonNull Collection<?> collection) {
+                return false;
+            }
+
+            @Override
+            public void clear() {
+
+            }
+
+            @Override
+            public AutocompletePrediction get(int i) {
+                return null;
+            }
+
+            @Override
+            public AutocompletePrediction set(int i, AutocompletePrediction autocompletePrediction) {
+                return null;
+            }
+
+            @Override
+            public void add(int i, AutocompletePrediction autocompletePrediction) {
+
+            }
+
+            @Override
+            public AutocompletePrediction remove(int i) {
+                return null;
+            }
+
+            @Override
+            public int indexOf(@Nullable Object o) {
+                return 0;
+            }
+
+            @Override
+            public int lastIndexOf(@Nullable Object o) {
+                return 0;
+            }
+
+            @NonNull
+            @Override
+            public ListIterator<AutocompletePrediction> listIterator() {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public ListIterator<AutocompletePrediction> listIterator(int i) {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public List<AutocompletePrediction> subList(int i, int i1) {
+                return null;
+            }
+        };
+    }
+
+    //LatLng Distances in Double format
+    /*
+    Double 0.07237 = 5 miles
+        7.071 miles to corner of Square Bounds
+    Double 0.14474 = 10 miles
+        14.143 miles to corner of Square Bounds
+    Double 0.28949 = 20 miles
+        28.287 miles to corner of Square Bounds
+    Double 0.3618 = 25 miles
+        35.35 miles to corner of Square Bounds
+    Double 0.7237 = 50 miles
+        70.71 miles to corner of Square Bounds
+     */
+    private void placeSearchResult(String query, String type, int id){
+        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+        PlaceInfo placeResult;
+        Double distance;
+        Repository repo = new Repository(getApplication());
+        Preference mPref = repo.getPreferenceById(1);
+        int prefDistance = mPref.getDistance();
+        switch (prefDistance){
+            case 5: distance = 0.036185;
+                break;
+            case 10: distance = 0.07237;
+                break;
+            case 20: distance = 0.14474;
+                break;
+            case 50: distance = 0.3618;
+                break;
+            default: distance = 0.1809;
+        }
+        getLocationPermission();
+        getDeviceLocation();
+        RectangularBounds bounds = RectangularBounds.newInstance(
+                new LatLng((currentLatLng.latitude + distance), (currentLatLng.longitude + distance)),
+                new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)));
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                .setLocationRestriction(bounds)
+                .setOrigin(currentLatLng)
+                .setTypesFilter(Arrays.asList(type))
+                .setSessionToken(token)
+                .setQuery(query)
+                .build();
         client.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
             for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
                 Log.i(TAG, prediction.getPlaceId());
                 Log.i(TAG, prediction.getPrimaryText(null).toString());
+                autoPredictions.add(prediction);
             }
-
+            AutocompletePrediction selectedPrediction = select.selectPrediction(autoPredictions);
+            placeIds.add(selectedPrediction.getPlaceId());
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
                 ApiException apiException = (ApiException) exception;
                 Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-                rerollPlaceSearch();
-                //Re-roll the autocomplete prediction with new search criteria.
+                redoPlaceSearch();
             }
         });
+    }
 
-
-        placeOptions.add(placeResult);
+    private void convertPlace(String placeId) {
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,
+                Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES);
+        FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(placeId, fields);
+        client.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
+            Place place = response.getPlace();
+            Log.i(TAG, "Place found: " + place.getName());
+            //convert place details into place info object
+            PlaceInfo placeInfo = new PlaceInfo(place.getName(), place.getAddress(), place.getPhoneNumber(),
+                    place.getWebsiteUri().toString(), place.getLatLng().latitude, place.getLatLng().longitude);
+            placeInfo.setPlaceId(Integer.parseInt(place.getId()));
+            placeInfo.setType(place.getTypes());\
+            placeOptions.add(placeInfo);
+        }).addOnFailureListener((exception) -> {
+            if(exception instanceof ApiException){
+                final ApiException apiException = (ApiException) exception;
+                Log.e(TAG, "Place not found: " + exception.getMessage());
+                final int statusCode = apiException.getStatusCode();
+            }
+        });
     }
 
     private void getDeviceLocation(){
@@ -245,7 +400,7 @@ public class PlaceChoice extends AppCompatActivity {
         }
     }
 
-    private void rerollPlaceSearch(){
+    private void redoPlaceSearch(){
         Repository repo = new Repository(getApplication());
         String search = "";
         if (choiceIndicatorId == 1){
@@ -260,7 +415,7 @@ public class PlaceChoice extends AppCompatActivity {
 
         }
         else {
-            Log.d(TAG, "rerollPlaceSearch: Unknown search type on reroll");
+            Log.d(TAG, "redoPlaceSearch: Unknown search type on reroll");
         }
     }
 }

@@ -3,8 +3,11 @@ package com.example.uptoyou.Datebase;
 import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.UI.Main;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Selector {
     private List<FoodPreference> foodSelectList;
@@ -41,4 +44,23 @@ public class Selector {
         return search;
     }
 
+    public AutocompletePrediction selectPrediction(List<AutocompletePrediction> autoPredictions) {
+        int listSize = autoPredictions.size();
+
+        List<Integer> randList = new ArrayList<>();
+        for(int i=0; i<listSize; i++){
+            randList.add(i);
+        }
+
+        int choice = getRandomElement(randList);
+
+        AutocompletePrediction predictionChoice = autoPredictions.get(choice);
+        return predictionChoice;
+
+    }
+
+    public int getRandomElement(List<Integer> list){
+        Random rand = new Random();
+        return list.get(rand.nextInt(list.size()));
+    }
 }

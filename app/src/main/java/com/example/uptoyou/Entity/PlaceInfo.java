@@ -5,6 +5,10 @@ import android.net.Uri;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.android.libraries.places.api.model.Place;
+
+import java.util.List;
+
 @Entity(tableName = "PlaceInfo")
 public class PlaceInfo {
     @PrimaryKey (autoGenerate = false)
@@ -16,17 +20,16 @@ public class PlaceInfo {
     private String websiteUri;
     private double lat;
     private double lng;
-    private String type;
+    private List<Place.Type> type;
 
 
-    public PlaceInfo(String placeName, String address, String phoneNumber, String websiteUri, double lat, double lng, String type){
+    public PlaceInfo(String placeName, String address, String phoneNumber, String websiteUri, double lat, double lng{
         this.placeName = placeName;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.websiteUri = websiteUri;
         this.lat = lat;
         this.lng = lng;
-        this.type = type;
     }
 
     public int getPlaceId() {
@@ -69,11 +72,11 @@ public class PlaceInfo {
         this.websiteUri = websiteUri;
     }
 
-    public String getType() {
+    public List<Place.Type> getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(List<Place.Type> type) {
         this.type = type;
     }
 
