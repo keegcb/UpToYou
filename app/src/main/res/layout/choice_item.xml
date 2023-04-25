@@ -49,8 +49,8 @@
 
         <ImageView
             android:id="@+id/imgPlacePhoto"
-            android:layout_width="372dp"
-            android:layout_height="195dp"
+            android:layout_width="360dp"
+            android:layout_height="200dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/txtPlaceName"
             app:layout_constraintStart_toStartOf="@+id/txtPlaceName"

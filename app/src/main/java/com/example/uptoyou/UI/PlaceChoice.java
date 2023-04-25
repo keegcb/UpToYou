@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
@@ -182,11 +184,34 @@ public class PlaceChoice extends AppCompatActivity {
 
     private void convertPlace(String placeId, String type) {
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,
-                Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES);
+                Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES, Place.Field.PHOTO_METADATAS);
         FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(placeId, fields);
         client.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
             Log.i(TAG, "Place found: " + place.getName());
+
+            List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+            if(metadata == null || metadata.isEmpty()){
+                Log.w(TAG, "No photo metadata.");
+                return;
+            }
+            PhotoMetadata photoMetadata = metadata.get(0);
+            String attributions = photoMetadata.getAttributions();
+            FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata).setMaxHeight(200).setMaxWidth(350).build();
+            client.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
+                Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                //imageView.setImageBitmap(bitmap);
+
+                //TODO: Save image in PlaceInfo Object using... BLOB?
+
+            }).addOnFailureListener((exception) -> {
+                if(exception instanceof ApiException) {
+                    final ApiException apiException = (ApiException) exception;
+                    Log.e(TAG, "Place not found: " + exception.getMessage());
+                    final int statusCode = apiException.getStatusCode();
+                }
+            });
+
             //convert place details into place info object
             PlaceInfo placeInfo = new PlaceInfo(place.getName(), place.getAddress(), place.getPhoneNumber(),
                     place.getWebsiteUri().toString(), place.getLatLng().latitude, place.getLatLng().longitude);
