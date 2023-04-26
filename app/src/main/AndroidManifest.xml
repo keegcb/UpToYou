@@ -20,7 +20,7 @@
         android:theme="@style/Theme.UpToYou"
         tools:targetApi="31">
         <activity
-            android:name=".FoodChoice"
+            android:name=".UI.PlaceChoice"
             android:exported="false" />
         <activity
             android:name=".UI.Preferences"

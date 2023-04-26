@@ -16,6 +16,8 @@ public class Selector {
     public String foodSelection(List<FoodPreference> foodPrefs){
         String search = "";
 
+        //Dummy info for search term for testing purposes
+        search = "hamburger";
         /*
         selection should be prioritized
 
