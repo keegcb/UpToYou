@@ -290,7 +290,7 @@ public class Repository {
         return mFoodPref;
     }
 
-    public List<ActivityPreference> getmActivityDesired(boolean desired){
+    public List<ActivityPreference> getActivityDesired(boolean desired){
         databaseExecutor.execute(()->{
             mActivityPref = activityPreferenceDAO.getActivityDesired(desired);
         });

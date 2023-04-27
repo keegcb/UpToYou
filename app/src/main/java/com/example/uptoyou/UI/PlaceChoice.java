@@ -26,6 +26,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
@@ -71,6 +72,7 @@ public class PlaceChoice extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_choice);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         initPlacesClient();
         initAutoPredictionsList();
         Bundle b = getIntent().getExtras();
@@ -105,14 +107,14 @@ public class PlaceChoice extends AppCompatActivity {
                 break;
             case 2:
                 choiceIndicatorId = 2;
-                activityDesired = repo.getmActivityDesired(true);
+                activityDesired = repo.getActivityDesired(true);
                 search = select.activitySelector(activityDesired);
                 //Add Place Detail search logic for place selection
                 break;
             case 3:
                 choiceIndicatorId = 3;
                 foodDesired = repo.getFoodDesired(true);
-                activityDesired = repo.getmActivityDesired(true);
+                activityDesired = repo.getActivityDesired(true);
                 search = select.randomSelector(foodDesired, activityDesired);
                 //Add Place Detail search logic for place selection
                 break;
@@ -230,6 +232,33 @@ public class PlaceChoice extends AppCompatActivity {
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: Getting the devices current location.");
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        try{
+            if(mLocationPermissionsGranted){
+                mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+
+
+                        if (location != null){
+                            Log.d(TAG, "onComplete: Current location found.");
+                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            currentLatLng = latLng;
+                            Log.d(TAG, "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude());
+                        }
+                        else{
+                            Log.d(TAG, "onComplete: Current location is null");
+                            Toast.makeText(PlaceChoice.this, "Unable to find current location.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }
+        catch (SecurityException e){
+            Log.e(TAG, "getDeviceLocation: Security Exception " + e.getMessage());
+        }
+
+        /*
         try {
             if (mLocationPermissionsGranted) {
                 final Task location = mFusedLocationProviderClient.getLastLocation();
@@ -239,7 +268,8 @@ public class PlaceChoice extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: Current location found.");
                             Location currentLocation = (Location) task.getResult();
-                            currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            currentLatLng = latLng;
                             Log.d(TAG, "Lat: " + currentLocation.getLatitude() + ", Lng: " + currentLocation.getLongitude());
                         }
                         else{
@@ -252,6 +282,8 @@ public class PlaceChoice extends AppCompatActivity {
         } catch (SecurityException e){
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
+
+         */
     }
 
     private void getLocationPermission(){
