@@ -239,7 +239,6 @@ public class PlaceChoice extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
 
-
                         if (location != null){
                             Log.d(TAG, "onComplete: Current location found.");
                             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
