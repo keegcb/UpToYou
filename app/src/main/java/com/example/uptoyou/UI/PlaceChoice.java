@@ -10,6 +10,8 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,8 +27,11 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
@@ -55,6 +60,7 @@ public class PlaceChoice extends AppCompatActivity {
     private List<PlaceInfo> placeOptions;
     private static int AUTOCOMPLETE_REQUEST_CODE= 1;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private LocationManager locationManager;
     private boolean mLocationPermissionsGranted = false;
     private static final String TAG = "PlaceChoiceActivity";
     private static int choiceIndicatorId;
@@ -73,6 +79,7 @@ public class PlaceChoice extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_choice);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        getLocationPermission();
         initPlacesClient();
         initAutoPredictionsList();
         Bundle b = getIntent().getExtras();
@@ -155,11 +162,19 @@ public class PlaceChoice extends AppCompatActivity {
                 break;
             default: distance = 0.1809;
         }
-        getLocationPermission();
         getDeviceLocation();
+
+        RectangularBounds bounds = RectangularBounds.newInstance(
+                new LatLng((42.33461099979685 + distance), (-83.0465496496764 - distance)),
+                new LatLng((42.33461099979685 - distance), (-83.0465496496764 - distance))
+        );
+
+        /* Bounds created after acquiring current location.
         RectangularBounds bounds = RectangularBounds.newInstance(
                 new LatLng((currentLatLng.latitude + distance), (currentLatLng.longitude + distance)),
                 new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)));
+
+         */
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 .setLocationRestriction(bounds)
                 .setOrigin(currentLatLng)
@@ -235,6 +250,45 @@ public class PlaceChoice extends AppCompatActivity {
 
         try{
             if(mLocationPermissionsGranted){
+
+                CancellationToken token = new CancellationToken() {
+                    @NonNull
+                    @Override
+                    public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+                        finish();
+                        return null;
+                    }
+
+                    @Override
+                    public boolean isCancellationRequested() {
+                        return false;
+                    }
+                };
+
+                Task<Location> locationTask = mFusedLocationProviderClient.getLastLocation();
+//TODO: Figure out why onSuccess AND onFailure are never called and fix so that app can get devices current location
+                locationTask.addOnSuccessListener(location -> {
+                    if(location != null){
+                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        currentLatLng = latLng;
+                        Log.d(TAG, "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude());
+                        Log.d(TAG, "onSuccess: Current location found.");
+                    } else {
+                        Log.d(TAG, "onSuccess: Location is null");
+                    }
+
+
+                });
+                locationTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: " + e.getMessage());
+                        Toast.makeText(PlaceChoice.this, "Unable to find current location.", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                /*
                 mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
@@ -251,6 +305,8 @@ public class PlaceChoice extends AppCompatActivity {
                         }
                     }
                 });
+
+                 */
             }
         }
         catch (SecurityException e){
