@@ -7,12 +7,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationRequest;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,8 +27,15 @@ import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.Entity.Preference;
 import com.example.uptoyou.R;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.CurrentLocationRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -67,6 +77,8 @@ public class PlaceChoice extends AppCompatActivity {
     private LatLng currentLatLng;
     private PlacesClient client;
     private List<AutocompletePrediction> autoPredictions;
+    private LocationRequest locationRequest;
+    private static final int REQUEST_CHECK_SETTINGS = 10001;
 
     private Selector select = new Selector();
 
@@ -74,11 +86,13 @@ public class PlaceChoice extends AppCompatActivity {
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 2345;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_choice);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         getLocationPermission();
         initPlacesClient();
         initAutoPredictionsList();
@@ -150,7 +164,7 @@ public class PlaceChoice extends AppCompatActivity {
         Double distance;
         Repository repo = new Repository(getApplication());
         Preference mPref = repo.getPreferenceById(1);
-        int prefDistance = mPref.getDistance();
+        int prefDistance = 20; //mPref.getDistance();
         switch (prefDistance){
             case 5: distance = 0.036185;
                 break;
@@ -164,17 +178,13 @@ public class PlaceChoice extends AppCompatActivity {
         }
         getDeviceLocation();
 
-        RectangularBounds bounds = RectangularBounds.newInstance(
-                new LatLng((42.33461099979685 + distance), (-83.0465496496764 - distance)),
-                new LatLng((42.33461099979685 - distance), (-83.0465496496764 - distance))
-        );
+        //currentLatLng = new LatLng(42.33461099979685, -83.0465496496764 );
 
-        /* Bounds created after acquiring current location.
         RectangularBounds bounds = RectangularBounds.newInstance(
-                new LatLng((currentLatLng.latitude + distance), (currentLatLng.longitude + distance)),
-                new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)));
+                new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)),
+                new LatLng((currentLatLng.latitude + distance), (currentLatLng.longitude + distance)));
 
-         */
+
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 .setLocationRestriction(bounds)
                 .setOrigin(currentLatLng)
@@ -251,20 +261,6 @@ public class PlaceChoice extends AppCompatActivity {
         try{
             if(mLocationPermissionsGranted){
 
-                CancellationToken token = new CancellationToken() {
-                    @NonNull
-                    @Override
-                    public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
-                        finish();
-                        return null;
-                    }
-
-                    @Override
-                    public boolean isCancellationRequested() {
-                        return false;
-                    }
-                };
-
                 Task<Location> locationTask = mFusedLocationProviderClient.getLastLocation();
 //TODO: Figure out why onSuccess AND onFailure are never called and fix so that app can get devices current location
                 locationTask.addOnSuccessListener(location -> {
@@ -276,8 +272,6 @@ public class PlaceChoice extends AppCompatActivity {
                     } else {
                         Log.d(TAG, "onSuccess: Location is null");
                     }
-
-
                 });
                 locationTask.addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -287,33 +281,14 @@ public class PlaceChoice extends AppCompatActivity {
                     }
                 });
 
-
-                /*
-                mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-
-                        if (location != null){
-                            Log.d(TAG, "onComplete: Current location found.");
-                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            currentLatLng = latLng;
-                            Log.d(TAG, "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude());
-                        }
-                        else{
-                            Log.d(TAG, "onComplete: Current location is null");
-                            Toast.makeText(PlaceChoice.this, "Unable to find current location.", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-
-                 */
             }
         }
         catch (SecurityException e){
             Log.e(TAG, "getDeviceLocation: Security Exception " + e.getMessage());
         }
 
-        /*
+
+/*
         try {
             if (mLocationPermissionsGranted) {
                 final Task location = mFusedLocationProviderClient.getLastLocation();
@@ -338,7 +313,9 @@ public class PlaceChoice extends AppCompatActivity {
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
 
-         */
+ */
+
+
     }
 
     private void getLocationPermission(){
@@ -346,7 +323,9 @@ public class PlaceChoice extends AppCompatActivity {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             if(ContextCompat.checkSelfPermission(this.getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+
                 mLocationPermissionsGranted = true;
+
             }
             else {
                 ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
@@ -355,6 +334,59 @@ public class PlaceChoice extends AppCompatActivity {
         else {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
+    }
+
+    private void turnOnGPS() {
+        //TODO: Add functionality to turn on the location if not already turned on
+        /*
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getApplicationContext())
+                .checkLocationSettings(builder.build());
+
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                    Toast.makeText(PlaceChoice.this, "GPS is already tured on", Toast.LENGTH_SHORT).show();
+
+                } catch (ApiException e) {
+
+                    switch (e.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+
+                            try {
+                                ResolvableApiException resolvableApiException = (ResolvableApiException)e;
+                                resolvableApiException.startResolutionForResult(PlaceChoice.this,REQUEST_CHECK_SETTINGS);
+                            } catch (IntentSender.SendIntentException ex) {
+                                ex.printStackTrace();
+                            }
+                            break;
+
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            //Device does not have location
+                            break;
+                    }
+                }
+            }
+        });
+
+         */
+
+    }
+
+    private boolean isGPSEnabled(){
+        LocationManager locationManager = null;
+        boolean isEnabled = false;
+        if(locationManager == null){
+            locationManager = (LocationManager) getSystemService(Context.LOCALE_SERVICE);
+        }
+        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return isEnabled;
     }
 
     private void redoPlaceSearch(){
