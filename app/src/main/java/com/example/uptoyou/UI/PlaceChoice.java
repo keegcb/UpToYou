@@ -76,7 +76,7 @@ public class PlaceChoice extends AppCompatActivity {
     private static final String TAG = "PlaceChoiceActivity";
     private static int choiceIndicatorId;
     private LatLng currentLatLng;
-    private PlacesClient client;
+    private PlacesClient placesClient;
     private List<AutocompletePrediction> autoPredictions;
     private LocationRequest locationRequest;
     private static final int REQUEST_CHECK_SETTINGS = 10001;
@@ -93,9 +93,8 @@ public class PlaceChoice extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_choice);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
+        placesClient = Places.createClient(this);
         getLocationPermission();
-        initAutoPredictionsList();
         Bundle b = getIntent().getExtras();
         int value; // or other values
         if(b != null){
@@ -189,7 +188,7 @@ public class PlaceChoice extends AppCompatActivity {
                 .setSessionToken(token)
                 .setQuery(query)
                 .build();
-        client.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
+        placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
             for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
                 Log.i(TAG, prediction.getPlaceId());
                 Log.i(TAG, prediction.getPrimaryText(null).toString());
@@ -210,8 +209,8 @@ public class PlaceChoice extends AppCompatActivity {
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,
                 Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES, Place.Field.PHOTO_METADATAS);
         FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(placeId, fields);
-        PlacesClient client = Places.createClient(this);
-        client.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
+
+        placesClient.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
             Log.i(TAG, "Place found: " + place.getName());
 
@@ -223,7 +222,7 @@ public class PlaceChoice extends AppCompatActivity {
             PhotoMetadata photoMetadata = metadata.get(0);
             String attributions = photoMetadata.getAttributions();
             FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata).setMaxHeight(200).setMaxWidth(350).build();
-            client.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
+            placesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
                 Bitmap bitmap = fetchPhotoResponse.getBitmap();
                 //imageView.setImageBitmap(bitmap);
 
@@ -350,7 +349,7 @@ public class PlaceChoice extends AppCompatActivity {
 
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
-                    Toast.makeText(PlaceChoice.this, "GPS is already tured on", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlaceChoice.this, "GPS is already turned on", Toast.LENGTH_SHORT).show();
 
                 } catch (ApiException e) {
 
@@ -406,129 +405,4 @@ public class PlaceChoice extends AppCompatActivity {
         }
     }
 
-
-    private void initAutoPredictionsList(){
-        autoPredictions = new List<AutocompletePrediction>() {
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(@Nullable Object o) {
-                return false;
-            }
-
-            @NonNull
-            @Override
-            public Iterator<AutocompletePrediction> iterator() {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @NonNull
-            @Override
-            public <T> T[] toArray(@NonNull T[] ts) {
-                return null;
-            }
-
-            @Override
-            public boolean add(AutocompletePrediction autocompletePrediction) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(@Nullable Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(@NonNull Collection<?> collection) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(@NonNull Collection<? extends AutocompletePrediction> collection) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int i, @NonNull Collection<? extends AutocompletePrediction> collection) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(@NonNull Collection<?> collection) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(@NonNull Collection<?> collection) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public AutocompletePrediction get(int i) {
-                return null;
-            }
-
-            @Override
-            public AutocompletePrediction set(int i, AutocompletePrediction autocompletePrediction) {
-                return null;
-            }
-
-            @Override
-            public void add(int i, AutocompletePrediction autocompletePrediction) {
-
-            }
-
-            @Override
-            public AutocompletePrediction remove(int i) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(@Nullable Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(@Nullable Object o) {
-                return 0;
-            }
-
-            @NonNull
-            @Override
-            public ListIterator<AutocompletePrediction> listIterator() {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public ListIterator<AutocompletePrediction> listIterator(int i) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public List<AutocompletePrediction> subList(int i, int i1) {
-                return null;
-            }
-        };
-    }
 }
