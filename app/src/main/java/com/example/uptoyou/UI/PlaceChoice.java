@@ -43,6 +43,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
@@ -94,7 +95,6 @@ public class PlaceChoice extends AppCompatActivity {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         getLocationPermission();
-        initPlacesClient();
         initAutoPredictionsList();
         Bundle b = getIntent().getExtras();
         int value; // or other values
@@ -112,9 +112,6 @@ public class PlaceChoice extends AppCompatActivity {
     private void identifySelector(int id){
         Repository repo = new Repository(getApplication());
         String search = "";
-
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,
-                Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES);
 
         switch (id){
             case 1:
@@ -164,7 +161,7 @@ public class PlaceChoice extends AppCompatActivity {
         Double distance;
         Repository repo = new Repository(getApplication());
         Preference mPref = repo.getPreferenceById(1);
-        int prefDistance = 20; //mPref.getDistance();
+        int prefDistance = mPref.getDistance();
         switch (prefDistance){
             case 5: distance = 0.036185;
                 break;
@@ -178,7 +175,7 @@ public class PlaceChoice extends AppCompatActivity {
         }
         getDeviceLocation();
 
-        //currentLatLng = new LatLng(42.33461099979685, -83.0465496496764 );
+        currentLatLng = new LatLng(42.33461099979685, -83.0465496496764 );
 
         RectangularBounds bounds = RectangularBounds.newInstance(
                 new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)),
@@ -213,6 +210,7 @@ public class PlaceChoice extends AppCompatActivity {
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,
                 Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES, Place.Field.PHOTO_METADATAS);
         FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(placeId, fields);
+        PlacesClient client = Places.createClient(this);
         client.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
             Log.i(TAG, "Place found: " + place.getName());
@@ -408,33 +406,6 @@ public class PlaceChoice extends AppCompatActivity {
         }
     }
 
-    private void initPlacesClient(){
-        client = new PlacesClient() {
-            @NonNull
-            @Override
-            public Task<FetchPhotoResponse> fetchPhoto(@NonNull FetchPhotoRequest fetchPhotoRequest) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Task<FetchPlaceResponse> fetchPlace(@NonNull FetchPlaceRequest fetchPlaceRequest) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Task<FindAutocompletePredictionsResponse> findAutocompletePredictions(@NonNull FindAutocompletePredictionsRequest findAutocompletePredictionsRequest) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Task<FindCurrentPlaceResponse> findCurrentPlace(@NonNull FindCurrentPlaceRequest findCurrentPlaceRequest) {
-                return null;
-            }
-        };
-    }
 
     private void initAutoPredictionsList(){
         autoPredictions = new List<AutocompletePrediction>() {
