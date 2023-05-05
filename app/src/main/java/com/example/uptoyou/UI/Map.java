@@ -6,8 +6,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -62,7 +64,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         try {
             if (mLocationPermissionsGranted) {
-                final Task location = mFusedLocationProviderClient.getLastLocation();
+                @SuppressLint("MissingPermission") final Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
@@ -80,8 +82,11 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
                     }
                 });
             }
-        } catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
+        } catch (SecurityException se){
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + se.getMessage());
+        }
+        catch (Exception e){
+            Log.e(TAG, "getDeviceLocation: Exception: " + e.getMessage());
         }
     }
 
