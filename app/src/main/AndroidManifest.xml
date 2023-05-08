@@ -6,8 +6,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" tools:node="remove" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -23,7 +23,8 @@
         tools:targetApi="31">
         <activity
             android:name=".UI.PlaceChoice"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".UI.Main"/>
         <activity
             android:name=".UI.Preferences"
             android:exported="false"
@@ -37,6 +38,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
+        <activity
+            android:name=".UI.PlaceSelection"
+            android:exported="false"
+            android:parentActivityName=".UI.Main" />
         <activity
             android:name=".UI.Map"
             android:exported="false"

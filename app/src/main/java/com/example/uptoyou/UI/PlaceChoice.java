@@ -191,7 +191,7 @@ public class PlaceChoice extends AppCompatActivity {
 
         //getDeviceLocation();
 
-        //currentLatLng = new LatLng(42.33461099979685, -83.0465496496764 );
+        currentLatLng = new LatLng(42.33461099979685, -83.0465496496764 );
 
         RectangularBounds bounds = RectangularBounds.newInstance(
                 new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)),
@@ -204,7 +204,9 @@ public class PlaceChoice extends AppCompatActivity {
                 .setSessionToken(token)
                 .setQuery(query)
                 .build();
+        Log.i(TAG, request.toString());
         placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
+            Log.i(TAG, "AutocompletePredictionRequest: Successful");
             for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
                 Log.i(TAG, prediction.getPlaceId());
                 Log.i(TAG, prediction.getPrimaryText(null).toString());
@@ -347,7 +349,7 @@ public class PlaceChoice extends AppCompatActivity {
                 mLocationPermissionsGranted = true;
 
                 //setupLocationUpdates();
-                getCurrentLocation();
+                //getCurrentLocation();
             }
             else {
                 ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);

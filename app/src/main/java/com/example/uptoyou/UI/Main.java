@@ -38,10 +38,22 @@ public class Main extends AppCompatActivity {
 
         if(correctServices()){
             initMap();
+            initPlace();
             initSettings();
             initFood();
             initData();
         }
+    }
+
+    private void initPlace() {
+        Button btnPlace = (Button) findViewById(R.id.btnPlace);
+        btnPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Main.this, PlaceSelection.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initMap(){
