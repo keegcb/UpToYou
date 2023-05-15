@@ -104,7 +104,7 @@ public class Main extends AppCompatActivity {
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Main.this, PlaceChoice.class);
+                Intent intent = new Intent(Main.this, PlaceSelection.class);
                 Bundle b = new Bundle();
                 b.putInt("key", 1);
                 intent.putExtras(b);

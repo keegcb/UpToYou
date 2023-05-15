@@ -191,7 +191,7 @@ public class PlaceChoice extends AppCompatActivity {
 
         //getDeviceLocation();
 
-        currentLatLng = new LatLng(42.33461099979685, -83.0465496496764 );
+        //currentLatLng = new LatLng(42.33461099979685, -83.0465496496764 );
 
         RectangularBounds bounds = RectangularBounds.newInstance(
                 new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)),
@@ -268,13 +268,13 @@ public class PlaceChoice extends AppCompatActivity {
             }
         });
     }
-/*
+
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: Getting the devices current location.");
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         try {
             if (mLocationPermissionsGranted) {
-                final Task location1 = mFusedLocationProviderClient.getLastLocation();
+                @SuppressLint("MissingPermission") final Task location1 = mFusedLocationProviderClient.getLastLocation();
                 if(location1 == null)
                     Log.d(TAG, "Null");
                 location1.addOnCompleteListener(new OnCompleteListener() {
@@ -308,8 +308,7 @@ public class PlaceChoice extends AppCompatActivity {
         try{
             if(mLocationPermissionsGranted){
 
-                Task<Location> locationTask = mFusedLocationProviderClient.getLastLocation();
-//TODO: Figure out why onSuccess AND onFailure are never called and fix so that app can get devices current location
+                @SuppressLint("MissingPermission") Task<Location> locationTask = mFusedLocationProviderClient.getLastLocation();
                 locationTask.addOnSuccessListener(location -> {
                     if(location != null){
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -339,7 +338,7 @@ public class PlaceChoice extends AppCompatActivity {
 
     }
 
- */
+
     private void getLocationPermission(){
         Log.d(TAG, "getLocationPermission: Getting location permissions");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -348,8 +347,8 @@ public class PlaceChoice extends AppCompatActivity {
 
                 mLocationPermissionsGranted = true;
 
-                //setupLocationUpdates();
-                //getCurrentLocation();
+                setupLocationUpdates();
+                getCurrentLocation();
             }
             else {
                 ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
