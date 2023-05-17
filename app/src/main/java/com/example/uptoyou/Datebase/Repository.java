@@ -38,7 +38,6 @@ public class Repository {
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    //TODO: Convert runnable executions to Callbacks with Future objects
 
     public Repository(Application application){
         DatabaseBuilder db = DatabaseBuilder.getDatabase(application);
@@ -231,29 +230,35 @@ public class Repository {
     }
 
     public List<FoodPreference> getFoodByPreference(int id){
-        databaseExecutor.execute(()->{
-            mFoodPref = foodPreferenceDAO.getFoodByPreference(id);
+        Future<List<FoodPreference>> foodPreferenceFuture = databaseExecutor.submit(new Callable<List<FoodPreference>>() {
+            @Override
+            public List<FoodPreference> call() throws Exception {
+                return foodPreferenceDAO.getFoodByPreference(id);
+            }
         });
+        List<FoodPreference> result = null;
         try{
-            Thread.sleep(10);
-        }
-        catch (InterruptedException e){
+            result = foodPreferenceFuture.get();
+        } catch (InterruptedException | ExecutionException e){
             e.printStackTrace();
         }
-        return mFoodPref;
+        return result;
     }
 
     public List<ActivityPreference> getActivityByPreference(int id){
-        databaseExecutor.execute(()->{
-            mActivityPref = activityPreferenceDAO.getActivityByPreference(id);
+        Future<List<ActivityPreference>> activityPreferenceFuture = databaseExecutor.submit(new Callable<List<ActivityPreference>>() {
+            @Override
+            public List<ActivityPreference> call() throws Exception {
+                return activityPreferenceDAO.getActivityByPreference(id);
+            }
         });
+        List<ActivityPreference> result = null;
         try{
-            Thread.sleep(10);
-        }
-        catch (InterruptedException e){
+            result = activityPreferenceFuture.get();
+        } catch (InterruptedException | ExecutionException e){
             e.printStackTrace();
         }
-        return mActivityPref;
+        return result;
     }
 
     public Preference getPreferenceById(int id) {
@@ -271,58 +276,55 @@ public class Repository {
         {
             e.printStackTrace();
         }
-        /*
-        databaseExecutor.execute(()->{
-            return preferenceDAO.getPreference(id);
-        });
-        try{
-            Thread.sleep(100);
-        }
-        catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        return mPreference;
-         */
         return result;
     }
 
     public  List<User> userExists(int id) {
-        databaseExecutor.execute(()->{
-            mUser = userDAO.getUsers(id);
+        Future<List<User>> userListFuture = databaseExecutor.submit(new Callable<List<User>>() {
+            @Override
+            public List<User> call() throws Exception {
+                return userDAO.getUsers(id);
+            }
         });
+        List<User> result = null;
         try{
-            Thread.sleep(10);
-        }
-        catch (InterruptedException e){
+            result = userListFuture.get();
+        } catch(InterruptedException | ExecutionException e){
             e.printStackTrace();
         }
-        return mUser;
+        return result;
     }
 
     public List<FoodPreference> getFoodDesired(boolean desired){
-        databaseExecutor.execute(()->{
-            mFoodPref = foodPreferenceDAO.getFoodDesired(desired);
+        Future<List<FoodPreference>> foodListFuture = databaseExecutor.submit(new Callable<List<FoodPreference>>() {
+            @Override
+            public List<FoodPreference> call() throws Exception {
+                return foodPreferenceDAO.getFoodDesired(desired);
+            }
         });
+        List<FoodPreference> result = null;
         try{
-            Thread.sleep(10);
-        }
-        catch (InterruptedException e){
+            result = foodListFuture.get();
+        } catch(InterruptedException | ExecutionException e){
             e.printStackTrace();
         }
-        return mFoodPref;
+        return result;
     }
 
     public List<ActivityPreference> getActivityDesired(boolean desired){
-        databaseExecutor.execute(()->{
-            mActivityPref = activityPreferenceDAO.getActivityDesired(desired);
+        Future<List<ActivityPreference>> activityListFuture = databaseExecutor.submit(new Callable<List<ActivityPreference>>() {
+            @Override
+            public List<ActivityPreference> call() throws Exception {
+                return activityPreferenceDAO.getActivityDesired(desired);
+            }
         });
+        List<ActivityPreference> result = null;
         try{
-            Thread.sleep(10);
-        }
-        catch (InterruptedException e){
+            result = activityListFuture.get();
+        } catch (InterruptedException | ExecutionException e){
             e.printStackTrace();
         }
-        return mActivityPref;
+        return result;
     }
 
 }
