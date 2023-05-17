@@ -16,8 +16,11 @@ import com.example.uptoyou.Entity.Preference;
 import com.example.uptoyou.Entity.User;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Repository {
     private final UserDAO userDAO;
@@ -34,6 +37,8 @@ public class Repository {
 
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+
+    //TODO: Convert runnable executions to Callbacks with Future objects
 
     public Repository(Application application){
         DatabaseBuilder db = DatabaseBuilder.getDatabase(application);
@@ -252,16 +257,33 @@ public class Repository {
     }
 
     public Preference getPreferenceById(int id) {
+        Future<Preference> preferenceFuture = databaseExecutor.submit(new Callable<Preference>() {
+            @Override
+            public Preference call() throws Exception {
+                return preferenceDAO.getPreference(id);
+            }
+        });
+        Preference result = null;
+        try
+        {
+            result = preferenceFuture.get();
+        } catch(InterruptedException | ExecutionException e)
+        {
+            e.printStackTrace();
+        }
+        /*
         databaseExecutor.execute(()->{
-            mPreference = preferenceDAO.getPreference(id);
+            return preferenceDAO.getPreference(id);
         });
         try{
-            Thread.sleep(10);
+            Thread.sleep(100);
         }
         catch (InterruptedException e){
             e.printStackTrace();
         }
         return mPreference;
+         */
+        return result;
     }
 
     public  List<User> userExists(int id) {

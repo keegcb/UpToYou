@@ -2,7 +2,6 @@ package com.example.uptoyou.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -11,7 +10,6 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.location.LocationRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -44,19 +42,21 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallback{
 
-    private List<PlaceInfo> placeOptions;
+    private List<PlaceInfo> placeOptions = new ArrayList<>();
     private static LatLng currentLatLng;
     private Location currentLocation;
     private PlacesClient placesClient;
     private static int choiceIndicatorId;
-    private List<FoodPreference> foodDesired;
-    private List<ActivityPreference> activityDesired;
-    private List<AutocompletePrediction> autoPredictions;
+    private List<FoodPreference> foodDesired = new ArrayList<>();
+    private List<ActivityPreference> activityDesired= new ArrayList<>();
+    private List<AutocompletePrediction> autoPredictions = new ArrayList<>();
     private Selector select = new Selector();;
     private static String apiKey = "AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw";
 
@@ -77,6 +77,7 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_selection);
 
+
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         Places.initialize(getApplicationContext(), apiKey);
         placesClient = Places.createClient(this);
@@ -84,21 +85,19 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
         getLocationPermission();
 
 
-
         /*
-        Bundle b = getIntent().getExtras();
-        int value; // or other values
-        if(b != null){
-            value = b.getInt("key");
-            identifySelector(value);
-            if(!placeOptions.isEmpty()){
-                //Populate recycler view with place options
-            }
-        } else {
-            finish();
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        Fut<LatLng> futureLatLng = executorService.submit(new LocationTask());
+        try {
+            currentLatLng = futureLatLng.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
          */
+
     }
 
     @Override
@@ -206,9 +205,10 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
                             Log.d(TAG, "onComplete: Current location found.");
                             currentLocation = (Location) task.getResult();
                             LatLng tempLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            PlaceSelection.currentLatLng = tempLatLng;
+                            currentLatLng = tempLatLng;
                             Log.d(TAG, "Lat: " + currentLocation.getLatitude() + ", Lng: " + currentLocation.getLongitude());
-                            moveCamera(currentLatLng, DEFAULT_ZOOM);
+                            moveCamera(tempLatLng, DEFAULT_ZOOM);
+                            identifySelector(1);
                         }
                         else{
                             Log.d(TAG, "onComplete: Current location is null");
@@ -308,10 +308,9 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
                     final int statusCode = apiException.getStatusCode();
                 }
             });
-
             //convert place details into place info object
             PlaceInfo placeInfo = new PlaceInfo(place.getName(), place.getAddress(), place.getPhoneNumber(),
-                    place.getWebsiteUri().toString(), place.getLatLng().latitude, place.getLatLng().longitude);
+                    Objects.toString(place.getWebsiteUri(), ""), place.getLatLng().latitude, place.getLatLng().longitude);
             placeInfo.setPlaceId(Integer.parseInt(place.getId()));
             placeInfo.setType(type);
             placeOptions.add(placeInfo);
