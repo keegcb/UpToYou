@@ -40,12 +40,21 @@ import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallback{
 
@@ -57,7 +66,8 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
     private List<FoodPreference> foodDesired = new ArrayList<>();
     private List<ActivityPreference> activityDesired= new ArrayList<>();
     private List<AutocompletePrediction> autoPredictions = new ArrayList<>();
-    private Selector select = new Selector();;
+    private Selector select = new Selector();
+    private int selectionType = 0;
     private static String apiKey = "AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw";
 
     private static final String TAG = "MapActivity";
@@ -82,21 +92,15 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
         Places.initialize(getApplicationContext(), apiKey);
         placesClient = Places.createClient(this);
 
-        getLocationPermission();
-
-
-        /*
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
-        Fut<LatLng> futureLatLng = executorService.submit(new LocationTask());
-        try {
-            currentLatLng = futureLatLng.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        Bundle b = getIntent().getExtras();
+        int value = 0; // or other values
+        if(b != null){
+            value = b.getInt("key");
+            selectionType = value;
         }
 
-         */
+        getLocationPermission();
+
 
     }
 
@@ -110,6 +114,22 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
             getDeviceLocation();
         }
     }
+
+    private void connectHTTP(){
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder()
+                .url("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522%2C151.1957362&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw")
+                .method("GET", body)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void identifySelector(int id){
         Repository repo = new Repository(getApplication());
@@ -208,7 +228,7 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
                             currentLatLng = tempLatLng;
                             Log.d(TAG, "Lat: " + currentLocation.getLatitude() + ", Lng: " + currentLocation.getLongitude());
                             moveCamera(tempLatLng, DEFAULT_ZOOM);
-                            identifySelector(1);
+                            identifySelector(selectionType);
                         }
                         else{
                             Log.d(TAG, "onComplete: Current location is null");
@@ -322,6 +342,7 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
             }
         });
     }
+    
 
     private void redoPlaceSearch(){
         Repository repo = new Repository(getApplication());

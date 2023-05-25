@@ -17,7 +17,8 @@ public class Selector {
         String search = "";
 
         //Dummy info for search term for testing purposes
-        search = "hamburger";
+        search = "restaurant";
+
         /*
         selection should be prioritized
 

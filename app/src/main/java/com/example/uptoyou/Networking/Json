@@ -1,0 +1,48 @@
+{
+         "business_status" : "OPERATIONAL",
+         "geometry" : {
+            "location" : {
+               "lat" : 42.379006,
+               "lng" : -82.9796406
+            },
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 42.38046907989272,
+                  "lng" : -82.97824862010728
+               },
+               "southwest" : {
+                  "lat" : 42.37776942010728,
+                  "lng" : -82.98094827989271
+               }
+            }
+         },
+         "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+         "icon_background_color" : "#FF9E67",
+         "icon_mask_base_uri" : "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+         "name" : "Hungry House",
+         "opening_hours" : {
+            "open_now" : false
+         },
+         "photos" : [
+            {
+               "height" : 1932,
+               "html_attributions" : [
+                  "\u003ca href=\"https://maps.google.com/maps/contrib/109481979645583750832\"\u003eDemetre Deshields\u003c/a\u003e"
+               ],
+               "photo_reference" : "AZose0k4jrBmtp7yTotlQItFn8LLhE-H5Jm7W-xXuxdPdCweani9mLEH-YQlU8S-LjOa6EBSSgGHl_N6QYwXaEfXBZibBvBktQJuj_6IO845WhjwL7yBa-EhEu93Ov_aW-JJuWouGzdxnKy0KalqJoeXDWaDwK0ujMU2lmtAlqI--9BVkBsR",
+               "width" : 1932
+            }
+         ],
+         "place_id" : "ChIJgfAunRfVJIgRtJm2BXxL1Mg",
+         "plus_code" : {
+            "compound_code" : "92HC+J4 Detroit, Michigan",
+            "global_code" : "86JV92HC+J4"
+         },
+         "price_level" : 1,
+         "rating" : 3.5,
+         "reference" : "ChIJgfAunRfVJIgRtJm2BXxL1Mg",
+         "scope" : "GOOGLE",
+         "types" : [ "restaurant", "point_of_interest", "food", "establishment" ],
+         "user_ratings_total" : 148,
+         "vicinity" : "11207 Mack Ave, Detroit"
+}
