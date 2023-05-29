@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.uptoyou.Datebase.Repository;
+import com.example.uptoyou.Datebase.Selector;
 import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.Entity.Preference;
@@ -106,9 +107,17 @@ public class Main extends AppCompatActivity {
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                Repository repo = new Repository(getApplication());
+                List<FoodPreference> food = repo.getFoodDesired(true);
+
+                Selector selector = new Selector();
+
+                String food1 = selector.foodSelection(food);
+                String food2 = selector.foodSelection(food);
                 Intent intent = new Intent(Main.this, PlaceSelection.class);
                 Bundle b = new Bundle();
-                b.putInt("key", 1);
+                b.putString("Food1", food1);
+                b.putString("Food2", food2);
                 intent.putExtras(b);
                 startActivity(intent);
             }
