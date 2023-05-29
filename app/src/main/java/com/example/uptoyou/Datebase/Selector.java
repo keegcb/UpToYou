@@ -2,6 +2,7 @@ package com.example.uptoyou.Datebase;
 
 import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
+import com.example.uptoyou.R;
 import com.example.uptoyou.UI.Main;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 
@@ -12,12 +13,24 @@ import java.util.Random;
 public class Selector {
     private List<FoodPreference> foodSelectList;
     private List<ActivityPreference> activitySelectList;
+    private FoodPreference foodPreference;
 
     public String foodSelection(List<FoodPreference> foodPrefs){
         String search = "";
+        List<FoodPreference> foodPref = foodPrefs;
+        int listSize = foodPref.size();
+        Random rand = new Random();
 
+        int randNum = rand.nextInt(listSize);
+
+        for(int i=0; i<listSize; i++){
+            if(i == randNum){
+                foodPreference = foodPref.get(i);
+                search = foodPreference.getFoodName();
+            }
+
+        }
         //Dummy info for search term for testing purposes
-        search = "restaurant";
 
         /*
         selection should be prioritized

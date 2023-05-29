@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class NearbyPlaces implements Serializable
+public class Results implements Serializable
 {
 
     @SerializedName("html_attributions")
@@ -16,7 +16,7 @@ public class NearbyPlaces implements Serializable
     private String nextPageToken;
     @SerializedName("results")
     @Expose
-    private List<Result> results;
+    private List<Place> results;
     @SerializedName("status")
     @Expose
     private String status;
@@ -26,7 +26,7 @@ public class NearbyPlaces implements Serializable
      * No args constructor for use in serialization
      *
      */
-    public NearbyPlaces() {
+    public Results() {
     }
 
     /**
@@ -36,7 +36,7 @@ public class NearbyPlaces implements Serializable
      * @param results
      * @param status
      */
-    public NearbyPlaces(List<Object> htmlAttributions, String nextPageToken, List<Result> results, String status) {
+    public Results(List<Object> htmlAttributions, String nextPageToken, List<Place> results, String status) {
         super();
         this.htmlAttributions = htmlAttributions;
         this.nextPageToken = nextPageToken;
@@ -52,7 +52,7 @@ public class NearbyPlaces implements Serializable
         this.htmlAttributions = htmlAttributions;
     }
 
-    public NearbyPlaces withHtmlAttributions(List<Object> htmlAttributions) {
+    public Results withHtmlAttributions(List<Object> htmlAttributions) {
         this.htmlAttributions = htmlAttributions;
         return this;
     }
@@ -65,21 +65,21 @@ public class NearbyPlaces implements Serializable
         this.nextPageToken = nextPageToken;
     }
 
-    public NearbyPlaces withNextPageToken(String nextPageToken) {
+    public Results withNextPageToken(String nextPageToken) {
         this.nextPageToken = nextPageToken;
         return this;
     }
 
-    public List<Result> getResults() {
+    public List<Place> getResults() {
         return results;
     }
 
-    public void setResults(List<Result> results) {
-        this.results = results;
+    public void setResults(List<Place> places) {
+        this.results = places;
     }
 
-    public NearbyPlaces withResults(List<Result> results) {
-        this.results = results;
+    public Results withResults(List<Place> places) {
+        this.results = places;
         return this;
     }
 
@@ -91,7 +91,7 @@ public class NearbyPlaces implements Serializable
         this.status = status;
     }
 
-    public NearbyPlaces withStatus(String status) {
+    public Results withStatus(String status) {
         this.status = status;
         return this;
     }

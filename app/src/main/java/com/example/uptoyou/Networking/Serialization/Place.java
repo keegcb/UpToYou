@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Result implements Serializable
+public class Place implements Serializable
 {
 
     @SerializedName("business_status")
@@ -65,7 +65,7 @@ public class Result implements Serializable
      * No args constructor for use in serialization
      *
      */
-    public Result() {
+    public Place() {
     }
 
     /**
@@ -88,7 +88,7 @@ public class Result implements Serializable
      * @param openingHours
      * @param vicinity
      */
-    public Result(String businessStatus, Geometry geometry, String icon, String iconBackgroundColor, String iconMaskBaseUri, String name, OpeningHours openingHours, List<Photo> photos, String placeId, PlusCode plusCode, Integer priceLevel, Integer rating, String reference, String scope, List<String> types, Integer userRatingsTotal, String vicinity) {
+    public Place(String businessStatus, Geometry geometry, String icon, String iconBackgroundColor, String iconMaskBaseUri, String name, OpeningHours openingHours, List<Photo> photos, String placeId, PlusCode plusCode, Integer priceLevel, Integer rating, String reference, String scope, List<String> types, Integer userRatingsTotal, String vicinity) {
         super();
         this.businessStatus = businessStatus;
         this.geometry = geometry;
@@ -117,7 +117,7 @@ public class Result implements Serializable
         this.businessStatus = businessStatus;
     }
 
-    public Result withBusinessStatus(String businessStatus) {
+    public Place withBusinessStatus(String businessStatus) {
         this.businessStatus = businessStatus;
         return this;
     }
@@ -130,7 +130,7 @@ public class Result implements Serializable
         this.geometry = geometry;
     }
 
-    public Result withGeometry(Geometry geometry) {
+    public Place withGeometry(Geometry geometry) {
         this.geometry = geometry;
         return this;
     }
@@ -143,7 +143,7 @@ public class Result implements Serializable
         this.icon = icon;
     }
 
-    public Result withIcon(String icon) {
+    public Place withIcon(String icon) {
         this.icon = icon;
         return this;
     }
@@ -156,7 +156,7 @@ public class Result implements Serializable
         this.iconBackgroundColor = iconBackgroundColor;
     }
 
-    public Result withIconBackgroundColor(String iconBackgroundColor) {
+    public Place withIconBackgroundColor(String iconBackgroundColor) {
         this.iconBackgroundColor = iconBackgroundColor;
         return this;
     }
@@ -169,7 +169,7 @@ public class Result implements Serializable
         this.iconMaskBaseUri = iconMaskBaseUri;
     }
 
-    public Result withIconMaskBaseUri(String iconMaskBaseUri) {
+    public Place withIconMaskBaseUri(String iconMaskBaseUri) {
         this.iconMaskBaseUri = iconMaskBaseUri;
         return this;
     }
@@ -182,7 +182,7 @@ public class Result implements Serializable
         this.name = name;
     }
 
-    public Result withName(String name) {
+    public Place withName(String name) {
         this.name = name;
         return this;
     }
@@ -195,7 +195,7 @@ public class Result implements Serializable
         this.openingHours = openingHours;
     }
 
-    public Result withOpeningHours(OpeningHours openingHours) {
+    public Place withOpeningHours(OpeningHours openingHours) {
         this.openingHours = openingHours;
         return this;
     }
@@ -208,7 +208,7 @@ public class Result implements Serializable
         this.photos = photos;
     }
 
-    public Result withPhotos(List<Photo> photos) {
+    public Place withPhotos(List<Photo> photos) {
         this.photos = photos;
         return this;
     }
@@ -221,7 +221,7 @@ public class Result implements Serializable
         this.placeId = placeId;
     }
 
-    public Result withPlaceId(String placeId) {
+    public Place withPlaceId(String placeId) {
         this.placeId = placeId;
         return this;
     }
@@ -234,7 +234,7 @@ public class Result implements Serializable
         this.plusCode = plusCode;
     }
 
-    public Result withPlusCode(PlusCode plusCode) {
+    public Place withPlusCode(PlusCode plusCode) {
         this.plusCode = plusCode;
         return this;
     }
@@ -247,7 +247,7 @@ public class Result implements Serializable
         this.priceLevel = priceLevel;
     }
 
-    public Result withPriceLevel(Integer priceLevel) {
+    public Place withPriceLevel(Integer priceLevel) {
         this.priceLevel = priceLevel;
         return this;
     }
@@ -260,7 +260,7 @@ public class Result implements Serializable
         this.rating = rating;
     }
 
-    public Result withRating(Integer rating) {
+    public Place withRating(Integer rating) {
         this.rating = rating;
         return this;
     }
@@ -273,7 +273,7 @@ public class Result implements Serializable
         this.reference = reference;
     }
 
-    public Result withReference(String reference) {
+    public Place withReference(String reference) {
         this.reference = reference;
         return this;
     }
@@ -286,7 +286,7 @@ public class Result implements Serializable
         this.scope = scope;
     }
 
-    public Result withScope(String scope) {
+    public Place withScope(String scope) {
         this.scope = scope;
         return this;
     }
@@ -299,7 +299,7 @@ public class Result implements Serializable
         this.types = types;
     }
 
-    public Result withTypes(List<String> types) {
+    public Place withTypes(List<String> types) {
         this.types = types;
         return this;
     }
@@ -312,7 +312,7 @@ public class Result implements Serializable
         this.userRatingsTotal = userRatingsTotal;
     }
 
-    public Result withUserRatingsTotal(Integer userRatingsTotal) {
+    public Place withUserRatingsTotal(Integer userRatingsTotal) {
         this.userRatingsTotal = userRatingsTotal;
         return this;
     }
@@ -325,7 +325,7 @@ public class Result implements Serializable
         this.vicinity = vicinity;
     }
 
-    public Result withVicinity(String vicinity) {
+    public Place withVicinity(String vicinity) {
         this.vicinity = vicinity;
         return this;
     }

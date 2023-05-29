@@ -20,6 +20,7 @@ import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.Entity.Preference;
+import com.example.uptoyou.Networking.JsonPlaceHolderAPI;
 import com.example.uptoyou.R;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -55,6 +56,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallback{
 
@@ -82,6 +85,8 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
+    private JsonPlaceHolderAPI jsonPlaceHolderAPI;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +96,13 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         Places.initialize(getApplicationContext(), apiKey);
         placesClient = Places.createClient(this);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        jsonPlaceHolderAPI = retrofit.create(JsonPlaceHolderAPI.class);
+
 
         Bundle b = getIntent().getExtras();
         int value = 0; // or other values
