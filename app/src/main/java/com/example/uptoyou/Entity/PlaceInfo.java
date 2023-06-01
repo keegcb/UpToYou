@@ -12,7 +12,7 @@ import java.util.List;
 @Entity(tableName = "PlaceInfo")
 public class PlaceInfo {
     @PrimaryKey (autoGenerate = false)
-    private int placeId;
+    private String placeId;
 
     private String placeName;
     private String address;
@@ -23,20 +23,18 @@ public class PlaceInfo {
     private String type;
 
 
-    public PlaceInfo(String placeName, String address, String phoneNumber, String websiteUri, double lat, double lng){
+    public PlaceInfo(String placeId, String placeName, String address, String phoneNumber, String websiteUri, double lat, double lng){
         this.placeName = placeName;
         this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.websiteUri = websiteUri;
         this.lat = lat;
         this.lng = lng;
     }
 
-    public int getPlaceId() {
+    public String getPlaceId() {
         return placeId;
     }
 
-    public void setPlaceId(int placeId) {
+    public void setPlaceId(String placeId) {
         this.placeId = placeId;
     }
 

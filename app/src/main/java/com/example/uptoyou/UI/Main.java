@@ -16,18 +16,30 @@ import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.Entity.Preference;
 import com.example.uptoyou.Entity.User;
+import com.example.uptoyou.Networking.JsonNearbyPlacesAPI;
+import com.example.uptoyou.Networking.Serialization.NearbyPlace;
+import com.example.uptoyou.Networking.Serialization.Results;
 import com.example.uptoyou.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Main extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
+    private JsonNearbyPlacesAPI jsonNearbyPlacesAPI;
+    private List<NearbyPlace> placeList;
 
     Button btnAddData;
 
@@ -114,12 +126,49 @@ public class Main extends AppCompatActivity {
 
                 String food1 = selector.foodSelection(food);
                 String food2 = selector.foodSelection(food);
+                connectFoodAPI(food1);
                 Intent intent = new Intent(Main.this, PlaceSelection.class);
                 Bundle b = new Bundle();
-                b.putString("Food1", food1);
-                b.putString("Food2", food2);
+                b.putString("key1", food1);
+                b.putString("key2", food2);
                 intent.putExtras(b);
                 startActivity(intent);
+            }
+        });
+    }
+
+    public void connectFoodAPI(String search){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        jsonNearbyPlacesAPI = retrofit.create(JsonNearbyPlacesAPI.class);
+        Call<Results> call = jsonNearbyPlacesAPI.getFoodResults(search);
+
+        call.enqueue(new Callback<Results>() {
+            @Override
+            public void onResponse(Call<Results> call, Response<Results> response) {
+                if(!response.isSuccessful()){
+                    String code = "Code: " + response.code();
+                    System.out.println(code);
+                    return;
+                }
+                Results results = response.body();
+                List<NearbyPlace> nearbyPlaces = results.getResults();
+                int listSize = nearbyPlaces.size();
+                Random rand = new Random();
+                int randNum = rand.nextInt(listSize);
+                for(int i=0; i<listSize; i++){
+                    if(i == randNum){
+                        NearbyPlace place = nearbyPlaces.get(i);
+                        placeList.add(place);
+                        //TODO: Implement place converter to save place data
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<Results> call, Throwable t) {
+                System.out.println(t.getMessage());
             }
         });
     }
@@ -129,9 +178,15 @@ public class Main extends AppCompatActivity {
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                Repository repo = new Repository(getApplication());
+                List<ActivityPreference> activity = repo.getActivityDesired(true);
+                Selector select = new Selector();
+                String act1 = select.activitySelection(activity);
+                String act2 = select.activitySelection(activity);
                 Intent intent = new Intent(Main.this, PlaceChoice.class);
                 Bundle b = new Bundle();
-                b.putInt("key", 2);
+                b.putString("key1", act1);
+                b.putString("key2", act2);
                 intent.putExtras(b);
                 startActivity(intent);
             }
@@ -143,9 +198,16 @@ public class Main extends AppCompatActivity {
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                Repository repo = new Repository(getApplication());
+                List<FoodPreference> foodPref = repo.getFoodDesired(true);
+                List<ActivityPreference> activityPref = repo.getActivityDesired(true);
+                Selector select = new Selector();
+                String food = select.foodSelection(foodPref);
+                String activity = select.activitySelection(activityPref);
                 Intent intent = new Intent(Main.this, PlaceChoice.class);
                 Bundle b = new Bundle();
-                b.putInt("key", 3);
+                b.putString("key1", food);
+                b.putString("key2", activity);
                 intent.putExtras(b);
                 startActivity(intent);
             }
@@ -163,43 +225,43 @@ public class Main extends AppCompatActivity {
                 preference.setPreferenceId(1);
 
                 //Food Preference Settings
-                FoodPreference american = new FoodPreference(1, 1,"American", false, 0);
-                FoodPreference bbq = new FoodPreference(1, 2,"BBQ", false, 0);
-                FoodPreference chinese = new FoodPreference(1, 3,"Chinese", false, 0);
-                FoodPreference french = new FoodPreference(1, 4,"French", false, 0);
-                FoodPreference hamburger = new FoodPreference(1, 5,"Hamburger", false, 0);
-                FoodPreference indian = new FoodPreference(1, 6,"Indian", false, 0);
-                FoodPreference italian = new FoodPreference(1, 7,"Italian", false, 0);
-                FoodPreference japanese = new FoodPreference(1, 8,"Japanese", false, 0);
-                FoodPreference mexican = new FoodPreference(1, 9,"Mexican", false, 0);
-                FoodPreference pizza = new FoodPreference(1, 10,"Pizza", false, 0);
-                FoodPreference seafood = new FoodPreference(1, 11,"Seafood", false, 0);
-                FoodPreference steak = new FoodPreference(1, 12,"Steak", false, 0);
-                FoodPreference sushi = new FoodPreference(1, 13,"Sushi", false, 0);
-                FoodPreference thai = new FoodPreference(1, 14,"Thai", false, 0);
+                FoodPreference american = new FoodPreference(1, 1,"American", true, 0);
+                FoodPreference bbq = new FoodPreference(1, 2,"BBQ", true, 0);
+                FoodPreference chinese = new FoodPreference(1, 3,"Chinese", true, 0);
+                FoodPreference french = new FoodPreference(1, 4,"French", true, 0);
+                FoodPreference hamburger = new FoodPreference(1, 5,"Hamburger", true, 0);
+                FoodPreference indian = new FoodPreference(1, 6,"Indian", true, 0);
+                FoodPreference italian = new FoodPreference(1, 7,"Italian", true, 0);
+                FoodPreference japanese = new FoodPreference(1, 8,"Japanese", true, 0);
+                FoodPreference mexican = new FoodPreference(1, 9,"Mexican", true, 0);
+                FoodPreference pizza = new FoodPreference(1, 10,"Pizza", true, 0);
+                FoodPreference seafood = new FoodPreference(1, 11,"Seafood", true, 0);
+                FoodPreference steak = new FoodPreference(1, 12,"Steak", true, 0);
+                FoodPreference sushi = new FoodPreference(1, 13,"Sushi", true, 0);
+                FoodPreference thai = new FoodPreference(1, 14,"Thai", true, 0);
                 //Activity Preference Settings
-                ActivityPreference arcade = new ActivityPreference(1, 1,"Arcade", false, 0);
-                ActivityPreference axe_throwing = new ActivityPreference(1, 2,"Axe Throwing", false, 0);
-                ActivityPreference beach = new ActivityPreference(1, 3,"Beach", false, 0);
-                ActivityPreference bowling = new ActivityPreference(1, 4,"Bowling", false, 0);
-                ActivityPreference casino = new ActivityPreference(1, 5,"Casino", false, 0);
-                ActivityPreference disk_golf = new ActivityPreference(1, 6,"Disk Golf", false, 0);
-                ActivityPreference escape_room = new ActivityPreference(1, 7, "Escape Room", false, 0);
-                ActivityPreference garden = new ActivityPreference(1, 8,"Garden", false, 0);
-                ActivityPreference golf = new ActivityPreference(1, 9,"Golf", false, 0);
-                ActivityPreference library = new ActivityPreference(1, 10,"Library", false, 0);
-                ActivityPreference hiking = new ActivityPreference(1, 11,"Hiking", false, 0);
-                ActivityPreference mini_golf = new ActivityPreference(1, 12,"Mini Golf", false, 0);
-                ActivityPreference movie_rental = new ActivityPreference(1, 13,"Movie Rental", false, 0);
-                ActivityPreference movie_theater = new ActivityPreference(1, 14,"Movie Theater", false, 0);
-                ActivityPreference museum = new ActivityPreference(1, 15,"Museum", false, 0);
-                ActivityPreference park = new ActivityPreference(1, 16,"Park", false, 0);
-                ActivityPreference rage_room = new ActivityPreference(1, 17,"Rage Room", false, 0);
-                ActivityPreference shopping_mall = new ActivityPreference(1, 18,"Shopping Mall", false, 0);
-                ActivityPreference spa = new ActivityPreference(1, 19,"Spa", false, 0);
-                ActivityPreference theme_park = new ActivityPreference(1, 20,"Theme Park", false, 0);
-                ActivityPreference tourist_attraction = new ActivityPreference(1, 21,"Tourist Attraction", false, 0);
-                ActivityPreference zoo = new ActivityPreference(1, 22,"Zoo", false, 0);
+                ActivityPreference arcade = new ActivityPreference(1, 1,"Arcade", true, 0);
+                ActivityPreference axe_throwing = new ActivityPreference(1, 2,"Axe Throwing", true, 0);
+                ActivityPreference beach = new ActivityPreference(1, 3,"Beach", true, 0);
+                ActivityPreference bowling = new ActivityPreference(1, 4,"Bowling", true, 0);
+                ActivityPreference casino = new ActivityPreference(1, 5,"Casino", true, 0);
+                ActivityPreference disk_golf = new ActivityPreference(1, 6,"Disk Golf", true, 0);
+                ActivityPreference escape_room = new ActivityPreference(1, 7, "Escape Room", true, 0);
+                ActivityPreference garden = new ActivityPreference(1, 8,"Garden", true, 0);
+                ActivityPreference golf = new ActivityPreference(1, 9,"Golf", true, 0);
+                ActivityPreference library = new ActivityPreference(1, 10,"Library", true, 0);
+                ActivityPreference hiking = new ActivityPreference(1, 11,"Hiking", true, 0);
+                ActivityPreference mini_golf = new ActivityPreference(1, 12,"Mini Golf", true, 0);
+                ActivityPreference movie_rental = new ActivityPreference(1, 13,"Movie Rental", true, 0);
+                ActivityPreference movie_theater = new ActivityPreference(1, 14,"Movie Theater", true, 0);
+                ActivityPreference museum = new ActivityPreference(1, 15,"Museum", true, 0);
+                ActivityPreference park = new ActivityPreference(1, 16,"Park", true, 0);
+                ActivityPreference rage_room = new ActivityPreference(1, 17,"Rage Room", true, 0);
+                ActivityPreference shopping_mall = new ActivityPreference(1, 18,"Shopping Mall", true, 0);
+                ActivityPreference spa = new ActivityPreference(1, 19,"Spa", true, 0);
+                ActivityPreference theme_park = new ActivityPreference(1, 20,"Theme Park", true, 0);
+                ActivityPreference tourist_attraction = new ActivityPreference(1, 21,"Tourist Attraction", true, 0);
+                ActivityPreference zoo = new ActivityPreference(1, 22,"Zoo", true, 0);
 
                 repo.insertUser(user);
                 repo.insertPreference(preference);

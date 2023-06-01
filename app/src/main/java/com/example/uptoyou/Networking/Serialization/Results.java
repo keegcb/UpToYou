@@ -16,7 +16,7 @@ public class Results implements Serializable
     private String nextPageToken;
     @SerializedName("results")
     @Expose
-    private List<Place> results;
+    private List<NearbyPlace> results;
     @SerializedName("status")
     @Expose
     private String status;
@@ -36,7 +36,7 @@ public class Results implements Serializable
      * @param results
      * @param status
      */
-    public Results(List<Object> htmlAttributions, String nextPageToken, List<Place> results, String status) {
+    public Results(List<Object> htmlAttributions, String nextPageToken, List<NearbyPlace> results, String status) {
         super();
         this.htmlAttributions = htmlAttributions;
         this.nextPageToken = nextPageToken;
@@ -70,15 +70,15 @@ public class Results implements Serializable
         return this;
     }
 
-    public List<Place> getResults() {
+    public List<NearbyPlace> getResults() {
         return results;
     }
 
-    public void setResults(List<Place> places) {
+    public void setResults(List<NearbyPlace> places) {
         this.results = places;
     }
 
-    public Results withResults(List<Place> places) {
+    public Results withResults(List<NearbyPlace> places) {
         this.results = places;
         return this;
     }

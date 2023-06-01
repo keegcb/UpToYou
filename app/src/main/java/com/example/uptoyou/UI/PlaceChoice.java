@@ -93,49 +93,18 @@ public class PlaceChoice extends AppCompatActivity {
         Places.initialize(getApplicationContext(), apiKey);
         placesClient = Places.createClient(this);
 
-
-        getLocationPermission();
         Bundle b = getIntent().getExtras();
-        int value; // or other values
+        String value1 = "";
+        String value2 = "";
         if(b != null){
-            value = b.getInt("key");
-            identifySelector(value);
+            value1 = b.getString("key1");
+            value2 = b.getString("key2");
+
             if(!placeOptions.isEmpty()){
                 //Populate recycler view with place options
             }
         } else {
             finish();
-        }
-    }
-
-    private void identifySelector(int id){
-        Repository repo = new Repository(getApplication());
-        String search = "";
-
-        switch (id){
-            case 1:
-                choiceIndicatorId = 1;
-                foodDesired = repo.getFoodDesired(true);
-                for(int i=0; i<2; i++){
-                    search = select.foodSelection(foodDesired);
-                    placeSearchResult(search, "restaurant", 1);
-                }
-                //Add Place Detail search logic for place selection
-                break;
-            case 2:
-                choiceIndicatorId = 2;
-                activityDesired = repo.getActivityDesired(true);
-                search = select.activitySelector(activityDesired);
-                //Add Place Detail search logic for place selection
-                break;
-            case 3:
-                choiceIndicatorId = 3;
-                foodDesired = repo.getFoodDesired(true);
-                activityDesired = repo.getActivityDesired(true);
-                search = select.randomSelector(foodDesired, activityDesired);
-                //Add Place Detail search logic for place selection
-                break;
-            default: Log.e("identifySelector", "no case");
         }
     }
 
@@ -172,40 +141,7 @@ public class PlaceChoice extends AppCompatActivity {
                 break;
             default: distance = 0.1809;
         }
-        getLocationPermission();
 
-        //getDeviceLocation();
-
-        //currentLatLng = new LatLng(42.33461099979685, -83.0465496496764 );
-
-        RectangularBounds bounds = RectangularBounds.newInstance(
-                new LatLng((currentLatLng.latitude - distance), (currentLatLng.longitude - distance)),
-                new LatLng((currentLatLng.latitude + distance), (currentLatLng.longitude + distance)));
-
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                .setLocationRestriction(bounds)
-                .setOrigin(currentLatLng)
-                .setTypesFilter(Arrays.asList(type))
-                .setSessionToken(token)
-                .setQuery(query)
-                .build();
-        Log.i(TAG, request.toString());
-        placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
-            Log.i(TAG, "AutocompletePredictionRequest: Successful");
-            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                Log.i(TAG, prediction.getPlaceId());
-                Log.i(TAG, prediction.getPrimaryText(null).toString());
-                autoPredictions.add(prediction);
-            }
-            AutocompletePrediction selectedPrediction = select.selectPrediction(autoPredictions);
-            convertPlace(selectedPrediction.getPlaceId(),type);
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                ApiException apiException = (ApiException) exception;
-                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-                redoPlaceSearch();
-            }
-        });
     }
 
     private void convertPlace(String placeId, String type) {
@@ -254,177 +190,6 @@ public class PlaceChoice extends AppCompatActivity {
         });
     }
 
-    private void getDeviceLocation(){
-        Log.d(TAG, "getDeviceLocation: Getting the devices current location.");
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        try {
-            if (mLocationPermissionsGranted) {
-                @SuppressLint("MissingPermission") final Task location1 = mFusedLocationProviderClient.getLastLocation();
-                if(location1 == null)
-                    Log.d(TAG, "Null");
-                location1.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: Current location found.");
-                            Location currentLocation = (Location) task.getResult();
-                            LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            Log.d(TAG, "Lat: " + currentLocation.getLatitude() + ", Lng: " + currentLocation.getLongitude());
-                        }
-                        else{
-                            Log.d(TAG, "onComplete: Current location is null");
-                            Toast.makeText(PlaceChoice.this, "Unable to find current location.", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        } catch (SecurityException se){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + se.getMessage());
-        }
-        catch (Exception e){
-            Log.e(TAG, "getDeviceLocation: Exception: " + e.getMessage());
-        }
-    }
-
-    private void getDeviceLocation_bad(){
-        Log.d(TAG, "getDeviceLocation: Getting the devices current location.");
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        try{
-            if(mLocationPermissionsGranted){
-
-                @SuppressLint("MissingPermission") Task<Location> locationTask = mFusedLocationProviderClient.getLastLocation();
-                locationTask.addOnSuccessListener(location -> {
-                    if(location != null){
-                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        currentLatLng = latLng;
-                        Log.d(TAG, "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude());
-                        Log.d(TAG, "onSuccess: Current location found.");
-                    } else {
-                        Log.d(TAG, "onSuccess: Location is null");
-                    }
-                });
-                locationTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: " + e.getMessage());
-                        Toast.makeText(PlaceChoice.this, "Unable to find current location.", Toast.LENGTH_LONG).show();
-                    }
-                });
-
-            }
-        }
-        catch (SecurityException se){
-            Log.e(TAG, "getDeviceLocation: Security Exception " + se.getMessage());
-        }
-        catch (Exception e){
-            Log.e(TAG, "getDeviceLocation: Security Exception " + e.getMessage());
-        }
-
-    }
-
-
-    private void getLocationPermission(){
-        Log.d(TAG, "getLocationPermission: Getting location permissions");
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-
-                mLocationPermissionsGranted = true;
-
-                setupLocationUpdates();
-                getCurrentLocation();
-            }
-            else {
-                ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            }
-        }
-        else {
-            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private void getCurrentLocation() {
-        CurrentLocationRequest currentLocationRequest = new CurrentLocationRequest.Builder()
-                .setGranularity(Granularity.GRANULARITY_FINE)
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .setDurationMillis(10000)
-                .setMaxUpdateAgeMillis(0)
-                .build();
-
-        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-
-        mFusedLocationProviderClient.getCurrentLocation(currentLocationRequest, cancellationTokenSource.getToken()).addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if(task.isSuccessful()){
-                    Location location = task.getResult();
-                    Log.d(TAG, "onComplete: " + location);
-                    currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                } else {
-                    task.getException().printStackTrace();
-                }
-            }
-        });
-
-        /*
-        mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if(task.isSuccessful()){
-                    Location location = task.getResult();
-                    Log.d(TAG, "onComplete: " + location);
-                } else {
-                    task.getException().printStackTrace();
-                }
-            }
-        });
-
-         */
-    }
-
-    @SuppressLint("MissingPermission")
-    private void setupLocationUpdates() {
-        LocationRequest locationRequest = new LocationRequest.Builder(10000)
-                .setGranularity(Granularity.GRANULARITY_FINE)
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .setDurationMillis(10000)
-                .setMaxUpdateAgeMillis(100)
-                .build();
-
-        LocationSettingsRequest locationSettingsRequest = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest)
-                .build();
-
-        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-        settingsClient.checkLocationSettings(locationSettingsRequest).addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
-                if(task.isSuccessful()){
-                    mFusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-                }else if(task.getException() instanceof ResolvableApiException){
-                    try{
-                        ResolvableApiException resolvableApiException = (ResolvableApiException) task.getException();
-                        resolvableApiException.startResolutionForResult(PlaceChoice.this, REQUEST_CHECK_SETTINGS);
-                    }
-                    catch (IntentSender.SendIntentException e){
-                        e.printStackTrace();
-                    }
-                }else{
-                    //Do somethings else
-                }
-            }
-        });
-    }
-
-    LocationCallback locationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(@NonNull LocationResult locationResult) {
-            super.onLocationResult(locationResult);
-            Log.d(TAG, "onLocationResult: " + locationResult);
-        }
-    };
     private void redoPlaceSearch(){
         Repository repo = new Repository(getApplication());
         String search = "";

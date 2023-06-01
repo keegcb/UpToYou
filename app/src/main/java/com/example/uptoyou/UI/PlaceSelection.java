@@ -20,7 +20,7 @@ import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.Entity.Preference;
-import com.example.uptoyou.Networking.JsonPlaceHolderAPI;
+import com.example.uptoyou.Networking.JsonNearbyPlacesAPI;
 import com.example.uptoyou.R;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -41,8 +41,6 @@ import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.IOException;
@@ -85,7 +83,7 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
-    private JsonPlaceHolderAPI jsonPlaceHolderAPI;
+    private JsonNearbyPlacesAPI jsonPlaceHolderAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +99,7 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
                 .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        jsonPlaceHolderAPI = retrofit.create(JsonPlaceHolderAPI.class);
+        jsonPlaceHolderAPI = retrofit.create(JsonNearbyPlacesAPI.class);
 
 
         Bundle b = getIntent().getExtras();
@@ -161,7 +159,7 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
             case 2:
                 choiceIndicatorId = 2;
                 activityDesired = repo.getActivityDesired(true);
-                search = select.activitySelector(activityDesired);
+                search = select.activitySelection(activityDesired);
                 //Add Place Detail search logic for place selection
                 break;
             case 3:
