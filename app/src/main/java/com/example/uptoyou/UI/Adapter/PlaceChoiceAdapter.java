@@ -40,7 +40,6 @@ public class PlaceChoiceAdapter extends RecyclerView.Adapter<PlaceChoiceAdapter.
         holder.name.setText(place.getPlaceName());
         holder.type.setText(place.getType());
         holder.address.setText(place.getAddress());
-        holder.website.setText(place.getWebsiteUri());
     }
 
     @Override

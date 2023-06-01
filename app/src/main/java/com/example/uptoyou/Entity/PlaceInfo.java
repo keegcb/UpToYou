@@ -2,6 +2,7 @@ package com.example.uptoyou.Entity;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -12,18 +13,17 @@ import java.util.List;
 @Entity(tableName = "PlaceInfo")
 public class PlaceInfo {
     @PrimaryKey (autoGenerate = false)
+    @NonNull
     private String placeId;
 
     private String placeName;
     private String address;
-    private String phoneNumber;
-    private String websiteUri;
     private double lat;
     private double lng;
-    private String type;
 
 
-    public PlaceInfo(String placeId, String placeName, String address, String phoneNumber, String websiteUri, double lat, double lng){
+    public PlaceInfo(String placeId, String placeName, String address, double lat, double lng){
+        this.placeId = placeId;
         this.placeName = placeName;
         this.address = address;
         this.lat = lat;
@@ -52,30 +52,6 @@ public class PlaceInfo {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getWebsiteUri() {
-        return websiteUri;
-    }
-
-    public void setWebsiteUri(String websiteUri) {
-        this.websiteUri = websiteUri;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public double getLat() {

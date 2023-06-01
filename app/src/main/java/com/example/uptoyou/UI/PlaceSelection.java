@@ -340,9 +340,7 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
                 }
             });
             //convert place details into place info object
-            PlaceInfo placeInfo = new PlaceInfo(place.getName(), place.getAddress(), place.getPhoneNumber(),
-                    Objects.toString(place.getWebsiteUri(), ""), place.getLatLng().latitude, place.getLatLng().longitude);
-            placeInfo.setPlaceId(Integer.parseInt(place.getId()));
+            PlaceInfo placeInfo = new PlaceInfo(place.getId(), place.getName(), place.getAddress(), place.getLatLng().latitude, place.getLatLng().longitude);
             placeInfo.setType(type);
             placeOptions.add(placeInfo);
         }).addOnFailureListener((exception) -> {

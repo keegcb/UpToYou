@@ -127,7 +127,6 @@ public class Selector {
                 for(int i=0; i<listSize; i++){
                     if(i == randNum){
                         NearbyPlace place = nearbyPlaces.get(i);
-                        convertNearbyPlace(search, place);
                         //TODO: Implement place converter to save place data
                     }
                 }
@@ -157,7 +156,7 @@ public class Selector {
                 }
                 Results results = response.body();
                 List<NearbyPlace> nearbyPlaces = results.getResults();
-                int listSize = nearbyPlaces.size();\
+                int listSize = nearbyPlaces.size();
                 Random rand = new Random();
                 int randNum = rand.nextInt(listSize);
                 for(int i=0; i<listSize; i++){
@@ -176,8 +175,13 @@ public class Selector {
 
     public List<PlaceInfo> convertNearbyPlace(List<NearbyPlace> placeList){
         List<PlaceInfo> placeInfoList = null;
+        String type;
         for(NearbyPlace nearbyPlace : placeList){
-
+            PlaceInfo placeInfo = new PlaceInfo(nearbyPlace.getPlaceId(),
+                    nearbyPlace.getName(),
+                    nearbyPlace.getVicinity(),
+                    nearbyPlace.getGeometry().getLocation().getLatitude(),
+                    nearbyPlace.getGeometry().getLocation().getLongitude());
         }
         return placeInfoList;
     }
