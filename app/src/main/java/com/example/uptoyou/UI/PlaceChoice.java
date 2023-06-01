@@ -93,19 +93,8 @@ public class PlaceChoice extends AppCompatActivity {
         Places.initialize(getApplicationContext(), apiKey);
         placesClient = Places.createClient(this);
 
-        Bundle b = getIntent().getExtras();
-        String value1 = "";
-        String value2 = "";
-        if(b != null){
-            value1 = b.getString("key1");
-            value2 = b.getString("key2");
+        List<PlaceInfo> placeList = Main.placeList;
 
-            if(!placeOptions.isEmpty()){
-                //Populate recycler view with place options
-            }
-        } else {
-            finish();
-        }
     }
 
     //TODO: Is this the proper way to set up an autocomplete PlacesClient object before using it?
@@ -177,7 +166,6 @@ public class PlaceChoice extends AppCompatActivity {
 
             //convert place details into place info object
             PlaceInfo placeInfo = new PlaceInfo(place.getId(), place.getName(), place.getAddress(), place.getLatLng().latitude, place.getLatLng().longitude);
-            placeInfo.setType(type);
             placeOptions.add(placeInfo);
         }).addOnFailureListener((exception) -> {
             if(exception instanceof ApiException){

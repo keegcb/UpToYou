@@ -341,7 +341,6 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
             });
             //convert place details into place info object
             PlaceInfo placeInfo = new PlaceInfo(place.getId(), place.getName(), place.getAddress(), place.getLatLng().latitude, place.getLatLng().longitude);
-            placeInfo.setType(type);
             placeOptions.add(placeInfo);
         }).addOnFailureListener((exception) -> {
             if(exception instanceof ApiException){

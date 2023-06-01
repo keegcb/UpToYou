@@ -14,6 +14,7 @@ import com.example.uptoyou.Datebase.Repository;
 import com.example.uptoyou.Datebase.Selector;
 import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
+import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.Entity.Preference;
 import com.example.uptoyou.Entity.User;
 import com.example.uptoyou.Networking.JsonNearbyPlacesAPI;
@@ -25,8 +26,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,7 +38,8 @@ public class Main extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private JsonNearbyPlacesAPI jsonNearbyPlacesAPI;
-    private List<NearbyPlace> placeList;
+    private List<NearbyPlace> nearbyPlaceList = null;
+    public static List<PlaceInfo> placeList;
 
     Button btnAddData;
 
@@ -126,8 +126,10 @@ public class Main extends AppCompatActivity {
 
                 String food1 = selector.foodSelection(food);
                 String food2 = selector.foodSelection(food);
-                connectFoodAPI(food1);
-                Intent intent = new Intent(Main.this, PlaceSelection.class);
+                connectFoodAPI();
+                connectFoodAPI();
+                selector.convertNearbyPlace(nearbyPlaceList);
+                Intent intent = new Intent(Main.this, PlaceChoice.class);
                 Bundle b = new Bundle();
                 b.putString("key1", food1);
                 b.putString("key2", food2);
@@ -137,14 +139,13 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    public void connectFoodAPI(String search){
+    public void connectFoodAPI(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         jsonNearbyPlacesAPI = retrofit.create(JsonNearbyPlacesAPI.class);
-        Call<Results> call = jsonNearbyPlacesAPI.getFoodResults(search);
-
+        Call<Results> call = jsonNearbyPlacesAPI.getFoodResults();
         call.enqueue(new Callback<Results>() {
             @Override
             public void onResponse(Call<Results> call, Response<Results> response) {
@@ -161,14 +162,14 @@ public class Main extends AppCompatActivity {
                 for(int i=0; i<listSize; i++){
                     if(i == randNum){
                         NearbyPlace place = nearbyPlaces.get(i);
-                        placeList.add(place);
+                        nearbyPlaceList.add(place);
                         //TODO: Implement place converter to save place data
                     }
                 }
             }
             @Override
             public void onFailure(Call<Results> call, Throwable t) {
-                System.out.println(t.getMessage());
+                t.printStackTrace();
             }
         });
     }

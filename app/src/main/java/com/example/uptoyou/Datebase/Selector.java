@@ -3,9 +3,11 @@ package com.example.uptoyou.Datebase;
 import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.Entity.PlaceInfo;
+import com.example.uptoyou.Entity.Type;
 import com.example.uptoyou.Networking.JsonNearbyPlacesAPI;
 import com.example.uptoyou.Networking.Serialization.NearbyPlace;
 import com.example.uptoyou.Networking.Serialization.Results;
+import com.example.uptoyou.R;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.Place;
 
@@ -102,14 +104,14 @@ public class Selector {
 
         return url;
     }
-
+/*
     public void connectFoodAPI(String search){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         jsonNearbyPlacesAPI = retrofit.create(JsonNearbyPlacesAPI.class);
-        Call<Results> call = jsonNearbyPlacesAPI.getFoodResults(search);
+        Call<Results> call = jsonNearbyPlacesAPI.getFoodResults();
 
         call.enqueue(new Callback<Results>() {
             @Override
@@ -137,6 +139,8 @@ public class Selector {
             }
         });
     }
+
+ */
 
     public void connectActivityAPI(String search){
         Retrofit retrofit = new Retrofit.Builder()
@@ -182,8 +186,18 @@ public class Selector {
                     nearbyPlace.getVicinity(),
                     nearbyPlace.getGeometry().getLocation().getLatitude(),
                     nearbyPlace.getGeometry().getLocation().getLongitude());
+            placeInfoList.add(placeInfo);
         }
         return placeInfoList;
+    }
+
+    public List<Type> convertPlaceType(NearbyPlace nearbyPlace){
+        List<Type> typeList = null;
+        for(int i=0; i<nearbyPlace.getTypes().size(); i++){
+                Type placeType = new Type(nearbyPlace.getTypes().get(i), nearbyPlace.getPlaceId());
+                typeList.add(placeType);
+        }
+        return typeList;
     }
 
 
