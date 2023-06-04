@@ -43,7 +43,7 @@ public class NearbyPlace implements Serializable
     private Integer priceLevel;
     @SerializedName("rating")
     @Expose
-    private Integer rating;
+    private Double rating;
     @SerializedName("reference")
     @Expose
     private String reference;
@@ -88,7 +88,7 @@ public class NearbyPlace implements Serializable
      * @param openingHours
      * @param vicinity
      */
-    public NearbyPlace(String businessStatus, Geometry geometry, String icon, String iconBackgroundColor, String iconMaskBaseUri, String name, OpeningHours openingHours, List<Photo> photos, String placeId, PlusCode plusCode, Integer priceLevel, Integer rating, String reference, String scope, List<String> types, Integer userRatingsTotal, String vicinity) {
+    public NearbyPlace(String businessStatus, Geometry geometry, String icon, String iconBackgroundColor, String iconMaskBaseUri, String name, OpeningHours openingHours, List<Photo> photos, String placeId, PlusCode plusCode, Integer priceLevel, Double rating, String reference, String scope, List<String> types, Integer userRatingsTotal, String vicinity) {
         super();
         this.businessStatus = businessStatus;
         this.geometry = geometry;
@@ -252,15 +252,15 @@ public class NearbyPlace implements Serializable
         return this;
     }
 
-    public Integer getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
-    public NearbyPlace withRating(Integer rating) {
+    public NearbyPlace withRating(Double rating) {
         this.rating = rating;
         return this;
     }

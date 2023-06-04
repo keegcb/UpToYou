@@ -38,7 +38,7 @@ public class Main extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private JsonNearbyPlacesAPI jsonNearbyPlacesAPI;
-    private List<NearbyPlace> nearbyPlaceList = null;
+    private List<NearbyPlace> nearbyPlaceList;
     public static List<PlaceInfo> placeList;
 
     Button btnAddData;
@@ -119,22 +119,15 @@ public class Main extends AppCompatActivity {
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+/*
                 Repository repo = new Repository(getApplication());
                 List<FoodPreference> food = repo.getFoodDesired(true);
-
                 Selector selector = new Selector();
-
                 String food1 = selector.foodSelection(food);
                 String food2 = selector.foodSelection(food);
+                
+ */
                 connectFoodAPI();
-                connectFoodAPI();
-                selector.convertNearbyPlace(nearbyPlaceList);
-                Intent intent = new Intent(Main.this, PlaceChoice.class);
-                Bundle b = new Bundle();
-                b.putString("key1", food1);
-                b.putString("key2", food2);
-                intent.putExtras(b);
-                startActivity(intent);
             }
         });
     }
@@ -146,6 +139,7 @@ public class Main extends AppCompatActivity {
                 .build();
         jsonNearbyPlacesAPI = retrofit.create(JsonNearbyPlacesAPI.class);
         Call<Results> call = jsonNearbyPlacesAPI.getFoodResults();
+        //TODO: Toast message attempt to connect to AIP
         call.enqueue(new Callback<Results>() {
             @Override
             public void onResponse(Call<Results> call, Response<Results> response) {
@@ -162,8 +156,12 @@ public class Main extends AppCompatActivity {
                 for(int i=0; i<listSize; i++){
                     if(i == randNum){
                         NearbyPlace place = nearbyPlaces.get(i);
+                        List<NearbyPlace> nearbyPlaceList = null;
                         nearbyPlaceList.add(place);
-                        //TODO: Implement place converter to save place data
+                        Selector selector = new Selector();
+                        placeList = selector.convertNearbyPlace(nearbyPlaceList);
+                        Intent intent = new Intent(Main.this, PlaceChoice.class);
+                        startActivity(intent);
                     }
                 }
             }
