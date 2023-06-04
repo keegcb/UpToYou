@@ -40,7 +40,7 @@ public class Main extends AppCompatActivity {
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private JsonNearbyPlacesAPI jsonNearbyPlacesAPI;
     private List<NearbyPlace> nearbyPlaceList;
-    public static List<PlaceInfo> placeList;
+    public static List<PlaceInfo> placeList = new ArrayList<>();
 
     Button btnAddData;
 
