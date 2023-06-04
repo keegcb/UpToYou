@@ -105,18 +105,13 @@ public class Selector {
         return url;
     }
 
-    public List<PlaceInfo> convertNearbyPlace(List<NearbyPlace> placeList){
-        List<PlaceInfo> placeInfoList = null;
-        String type;
-        for(NearbyPlace nearbyPlace : placeList){
-            PlaceInfo placeInfo = new PlaceInfo(nearbyPlace.getPlaceId(),
-                    nearbyPlace.getName(),
-                    nearbyPlace.getVicinity(),
-                    nearbyPlace.getGeometry().getLocation().getLatitude(),
-                    nearbyPlace.getGeometry().getLocation().getLongitude());
-            placeInfoList.add(placeInfo);
-        }
-        return placeInfoList;
+    public PlaceInfo convertNearbyPlace(NearbyPlace place){
+            PlaceInfo placeInfo = new PlaceInfo(place.getPlaceId(),
+                    place.getName(),
+                    place.getVicinity(),
+                    place.getGeometry().getLocation().getLatitude(),
+                    place.getGeometry().getLocation().getLongitude());
+        return placeInfo;
     }
 
     public List<Type> convertPlaceType(NearbyPlace nearbyPlace){

@@ -24,6 +24,7 @@ import com.example.uptoyou.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -152,18 +153,19 @@ public class Main extends AppCompatActivity {
                 List<NearbyPlace> nearbyPlaces = results.getResults();
                 int listSize = nearbyPlaces.size();
                 Random rand = new Random();
-                int randNum = rand.nextInt(listSize);
-                for(int i=0; i<listSize; i++){
-                    if(i == randNum){
-                        NearbyPlace place = nearbyPlaces.get(i);
-                        List<NearbyPlace> nearbyPlaceList = null;
-                        nearbyPlaceList.add(place);
-                        Selector selector = new Selector();
-                        placeList = selector.convertNearbyPlace(nearbyPlaceList);
-                        Intent intent = new Intent(Main.this, PlaceChoice.class);
-                        startActivity(intent);
+                do{
+                    int randNum = rand.nextInt(listSize);
+                    for(int i=0; i<listSize; i++){
+                        if(i == randNum){
+                            NearbyPlace place = nearbyPlaces.get(i);
+                            Selector selector = new Selector();
+                            PlaceInfo placeInfo = selector.convertNearbyPlace(place);
+                            placeList.add(placeInfo);
+                        }
                     }
-                }
+                }while(placeList.size() < 2);
+                Intent intent = new Intent(Main.this, PlaceChoice.class);
+                startActivity(intent);
             }
             @Override
             public void onFailure(Call<Results> call, Throwable t) {
