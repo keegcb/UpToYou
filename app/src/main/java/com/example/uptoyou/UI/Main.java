@@ -2,7 +2,9 @@ package com.example.uptoyou.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -170,6 +172,16 @@ public class Main extends AppCompatActivity {
             @Override
             public void onFailure(Call<Results> call, Throwable t) {
                 t.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(Main.this);
+                builder.setMessage("Results failed to get a response. Please check your network connectivity and try again.");
+                builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //OK button confirms message but does not perform any action
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }

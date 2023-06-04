@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -24,6 +26,7 @@ import com.example.uptoyou.Entity.FoodPreference;
 import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.Entity.Preference;
 import com.example.uptoyou.R;
+import com.example.uptoyou.UI.Adapter.PlaceChoiceAdapter;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.CurrentLocationRequest;
@@ -89,12 +92,15 @@ public class PlaceChoice extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_choice);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
         Places.initialize(getApplicationContext(), apiKey);
         placesClient = Places.createClient(this);
 
         List<PlaceInfo> placeList = Main.placeList;
 
+        RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
+        final PlaceChoiceAdapter adapter = new PlaceChoiceAdapter(this, placeList);
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     //TODO: Is this the proper way to set up an autocomplete PlacesClient object before using it?

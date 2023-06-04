@@ -13,11 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceChoiceAdapter extends RecyclerView.Adapter<PlaceChoiceAdapter.MyViewHolder> {
     Context context;
-    List<PlaceInfo> placeList;
+    List<PlaceInfo> placeList = new ArrayList<>();
 
     public PlaceChoiceAdapter(Context context, List<PlaceInfo> places){
         this.context = context;
@@ -35,7 +36,6 @@ public class PlaceChoiceAdapter extends RecyclerView.Adapter<PlaceChoiceAdapter.
     @Override
     public void onBindViewHolder(@NonNull PlaceChoiceAdapter.MyViewHolder holder, int position) {
         PlaceInfo place = placeList.get(position);
-        int tPosition = position;
 
         holder.name.setText(place.getPlaceName());
         holder.address.setText(place.getAddress());
@@ -63,4 +63,5 @@ public class PlaceChoiceAdapter extends RecyclerView.Adapter<PlaceChoiceAdapter.
             photo = itemView.findViewById(R.id.imgPlacePhoto);
         }
     }
+
 }
