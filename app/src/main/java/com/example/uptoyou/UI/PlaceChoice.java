@@ -23,6 +23,7 @@ import com.example.uptoyou.Datebase.Repository;
 import com.example.uptoyou.Datebase.Selector;
 import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
+import com.example.uptoyou.Entity.History;
 import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.Entity.Preference;
 import com.example.uptoyou.R;
@@ -96,12 +97,17 @@ public class PlaceChoice extends AppCompatActivity {
         placesClient = Places.createClient(this);
 
         List<PlaceInfo> placeList = Main.placeList;
-
+        Repository repo = new Repository(getApplication());
+        for(PlaceInfo place : placeList){
+            repo.insertPlaceInfo(place);
+        }
         RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
         final PlaceChoiceAdapter adapter = new PlaceChoiceAdapter(this, placeList);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
+
 
     //TODO: Is this the proper way to set up an autocomplete PlacesClient object before using it?
 
@@ -138,6 +144,7 @@ public class PlaceChoice extends AppCompatActivity {
         }
 
     }
+
 
     private void convertPlace(String placeId, String type) {
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,

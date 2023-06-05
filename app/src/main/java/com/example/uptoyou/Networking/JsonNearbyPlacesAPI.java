@@ -10,6 +10,14 @@ import retrofit2.http.Path;
 
 public interface JsonNearbyPlacesAPI {
 
+    /* Radius Conversions
+        5 miles away = 8046 meters
+        10 miles away = 16093 meters
+        20 miles away = 32186 meters
+        25 miles away = 40233 meters
+        30 miles away = 48280 meters
+     */
+
     @GET("json?location=-33.8670522%2C151.1957362&radius=1500&type=restaurant&key=AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw")
     Call <Results> getFoodResults();
 

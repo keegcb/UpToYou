@@ -11,10 +11,10 @@ public class History {
     private int historyId;
 
     private int userId;
-    private int placeId;
+    private String placeId;
     private Date date;
 
-    public History(int userId, int placeId, Date date) {
+    public History(int userId, String placeId, Date date) {
         this.userId = userId;
         this.placeId = placeId;
         this.date = date;
@@ -28,11 +28,11 @@ public class History {
         this.historyId = historyId;
     }
 
-    public int getPlaceId() {
+    public String getPlaceId() {
         return placeId;
     }
 
-    public void setPlaceId(int placeId) {
+    public void setPlaceId(String placeId) {
         this.placeId = placeId;
     }
 
@@ -51,4 +51,5 @@ public class History {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
 }

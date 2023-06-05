@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.uptoyou.Datebase.Repository;
+import com.example.uptoyou.Entity.History;
 import com.example.uptoyou.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -25,7 +27,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.time.Instant;
+import java.util.Date;
+
 public class Map extends AppCompatActivity implements OnMapReadyCallback{
+    private String address;
+    private Double lat;
+    private Double lng;
+    private LatLng placeLatLng;
+    private String placeId;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -57,6 +67,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         setContentView(R.layout.activity_map);
         getLocationPermission();
 
+        address = getIntent().getStringExtra("address");
+        lat = getIntent().getDoubleExtra("lat", 42.33461099979685);
+        lng = getIntent().getDoubleExtra("lng", -83.0465496496764);
+        placeId = getIntent().getStringExtra("placeId");
+        placeLatLng = new LatLng(lat, lng);
+
+        Date datetime = Date.from(Instant.now());
+
+        Repository repo = new Repository(getApplication());
+        History history = new History(1, placeId, Date.from(Instant.now()));
+        repo.insertHistory(history);
     }
 
     private void getDeviceLocation(){
@@ -73,7 +94,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
                             Location currentLocation = (Location) task.getResult();
                             LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             Log.d(TAG, "Lat: " + currentLocation.getLatitude() + ", Lng: " + currentLocation.getLongitude());
-                            moveCamera(currentLatLng, DEFAULT_ZOOM);
+                            //moveCamera(currentLatLng, DEFAULT_ZOOM);
+                            moveCamera(placeLatLng, DEFAULT_ZOOM);
                         }
                         else{
                             Log.d(TAG, "onComplete: Current location is null");
