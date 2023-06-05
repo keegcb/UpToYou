@@ -328,4 +328,51 @@ public class Repository {
     }
 
 
+    public List<PlaceInfo> getAllPlaceInfo() {
+        Future<List<PlaceInfo>> placeInfoListFuture = databaseExecutor.submit(new Callable<List<PlaceInfo>>() {
+            @Override
+            public List<PlaceInfo> call() throws Exception {
+                return placeInfoDAO.getAllPlaceInfo();
+            }
+        });
+        List<PlaceInfo> result = null;
+        try{
+            result = placeInfoListFuture.get();
+        } catch (InterruptedException | ExecutionException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public PlaceInfo getPlaceById(String id){
+        Future<PlaceInfo> placeInfoFuture = databaseExecutor.submit(new Callable<PlaceInfo>() {
+            @Override
+            public PlaceInfo call() throws Exception {
+                return placeInfoDAO.getPlaceById(id);
+            }
+        });
+        PlaceInfo result = null;
+        try{
+            result = placeInfoFuture.get();
+        } catch (InterruptedException | ExecutionException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public List<History> getHistory() {
+        Future<List<History>> historyFuture = databaseExecutor.submit(new Callable<List<History>>() {
+            @Override
+            public List<History> call() throws Exception {
+                return historyDAO.getHistory();
+            }
+        });
+        List<History> result = null;
+        try{
+            result = historyFuture.get();
+        } catch (InterruptedException | ExecutionException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

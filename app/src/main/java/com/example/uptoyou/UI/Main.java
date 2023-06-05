@@ -206,6 +206,63 @@ public class Main extends AppCompatActivity {
         });
     }
 
+    //TODO: Fix call so application waits for results before moving to launch activity
+    public void connectActivityAPI(String type){
+        Repository repo = new Repository(getApplication());
+        List<ActivityPreference> activityDesired = repo.getActivityDesired(true);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        jsonNearbyPlacesAPI = retrofit.create(JsonNearbyPlacesAPI.class);
+        Selector selector = new Selector();
+        do{
+            String activityType = selector.activitySelection(activityDesired);
+            Call<Results> call = jsonNearbyPlacesAPI.getActivityResults(type);
+            call.enqueue(new Callback<Results>() {
+                @Override
+                public void onResponse(Call<Results> call, Response<Results> response) {
+                    if(!response.isSuccessful()){
+                        String code = "Code: " + response.code();
+                        System.out.println(code);
+                        return;
+                    }
+                    Results results = response.body();
+                    List<NearbyPlace> nearbyPlaces = results.getResults();
+                    int listSize = nearbyPlaces.size();
+                    Random rand = new Random();
+                    int randNum = rand.nextInt(listSize);
+                    for(int i=0; i<listSize; i++){
+                         if(i == randNum){
+                              NearbyPlace place = nearbyPlaces.get(i);
+                              Selector selector = new Selector();
+                              PlaceInfo placeInfo = selector.convertNearbyPlace(place);
+                              placeList.add(placeInfo);
+                         }
+                    }
+                }
+                @Override
+                public void onFailure(Call<Results> call, Throwable t) {
+                    t.printStackTrace();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Main.this);
+                    builder.setMessage("Results failed to get a response. Please check your network connectivity and try again.");
+                    builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //OK button confirms message but does not perform any action
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
+
+        }
+        while(placeList.size()<2);
+        Intent intent = new Intent(Main.this, PlaceChoice.class);
+        startActivity(intent);
+    }
+
     private void initRandom(){
         Button btnFood = (Button) findViewById(R.id.btnRandom);
         btnFood.setOnClickListener(new View.OnClickListener(){
@@ -222,6 +279,17 @@ public class Main extends AppCompatActivity {
                 b.putString("key1", food);
                 b.putString("key2", activity);
                 intent.putExtras(b);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initReport(){
+        Button btnReport = (Button) findViewById(R.id.btnReport);
+        btnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Main.this, Reports.class);
                 startActivity(intent);
             }
         });

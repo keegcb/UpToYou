@@ -73,8 +73,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         placeId = getIntent().getStringExtra("placeId");
         placeLatLng = new LatLng(lat, lng);
 
-        Date datetime = Date.from(Instant.now());
-
         Repository repo = new Repository(getApplication());
         History history = new History(1, placeId, Date.from(Instant.now()));
         repo.insertHistory(history);
