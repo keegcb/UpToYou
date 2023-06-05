@@ -59,12 +59,14 @@ public class Main extends AppCompatActivity {
             initPlace();
             initSettings();
             initFood();
+            initActivity();
             initData();
+            initReport();
         }
     }
 
     private void initPlace() {
-        Button btnPlace = (Button) findViewById(R.id.btnPlace);
+        Button btnPlace = findViewById(R.id.btnPlace);
         btnPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +77,7 @@ public class Main extends AppCompatActivity {
     }
 
     private void initMap(){
-        Button btnMap = (Button) findViewById(R.id.btnMap);
+        Button btnMap = findViewById(R.id.btnMap);
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,7 +109,7 @@ public class Main extends AppCompatActivity {
     }
 
     private void initSettings(){
-        Button btnSetting = (Button) findViewById(R.id.btnSetting);
+        Button btnSetting = findViewById(R.id.btnSetting);
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +120,7 @@ public class Main extends AppCompatActivity {
     }
 
     private void initFood(){
-        Button btnFood = (Button) findViewById(R.id.btnFood);
+        Button btnFood = findViewById(R.id.btnFood);
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -187,7 +189,7 @@ public class Main extends AppCompatActivity {
     }
 
     private void initActivity(){
-        Button btnFood = (Button) findViewById(R.id.btnActivity);
+        Button btnFood = findViewById(R.id.btnActivity);
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -264,7 +266,7 @@ public class Main extends AppCompatActivity {
     }
 
     private void initRandom(){
-        Button btnFood = (Button) findViewById(R.id.btnRandom);
+        Button btnFood = findViewById(R.id.btnRandom);
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -285,7 +287,7 @@ public class Main extends AppCompatActivity {
     }
 
     private void initReport(){
-        Button btnReport = (Button) findViewById(R.id.btnReport);
+        Button btnReport = findViewById(R.id.btnReport);
         btnReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -296,7 +298,7 @@ public class Main extends AppCompatActivity {
     }
 
     private void initData(){
-        Button btnData = (Button) findViewById(R.id.btnData);
+        Button btnData = findViewById(R.id.btnData);
         btnData.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){

@@ -65,10 +65,10 @@ public class PlaceChoice extends AppCompatActivity {
     private List<FoodPreference> foodDesired;
     private List<ActivityPreference> activityDesired;
     private List<PlaceInfo> placeOptions;
-    private static int AUTOCOMPLETE_REQUEST_CODE= 1;
+    private static final int AUTOCOMPLETE_REQUEST_CODE= 1;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationManager locationManager;
-    private boolean mLocationPermissionsGranted = false;
+    private final boolean mLocationPermissionsGranted = false;
     private static final String TAG = "PlaceChoiceActivity";
     private static int choiceIndicatorId;
     private LatLng currentLatLng;
@@ -77,10 +77,10 @@ public class PlaceChoice extends AppCompatActivity {
     private static final int REQUEST_CHECK_SETTINGS = 10001;
 
     //TODO: REMOVE HARD CODED API KEY VALUE
-    private static String apiKey = "AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw";
+    private static final String apiKey = "AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw";
     private GoogleMap mMap;
 
-    private Selector select = new Selector();
+    private final Selector select = new Selector();
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;

@@ -80,7 +80,7 @@ public class Preferences extends AppCompatActivity {
         activityRecycler.setAdapter(activityAdapter);
         activityRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        Button btnSave = (Button) findViewById(R.id.btnSave);
+        Button btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

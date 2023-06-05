@@ -59,17 +59,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallback{
 
-    private List<PlaceInfo> placeOptions = new ArrayList<>();
+    private final List<PlaceInfo> placeOptions = new ArrayList<>();
     private static LatLng currentLatLng;
     private Location currentLocation;
     private PlacesClient placesClient;
     private static int choiceIndicatorId;
     private List<FoodPreference> foodDesired = new ArrayList<>();
     private List<ActivityPreference> activityDesired= new ArrayList<>();
-    private List<AutocompletePrediction> autoPredictions = new ArrayList<>();
-    private Selector select = new Selector();
+    private final List<AutocompletePrediction> autoPredictions = new ArrayList<>();
+    private final Selector select = new Selector();
     private int selectionType = 0;
-    private static String apiKey = "AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw";
+    private static final String apiKey = "AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw";
 
     private static final String TAG = "MapActivity";
 

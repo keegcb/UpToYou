@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Reports extends AppCompatActivity {
-    TableLayout tableLayout = (TableLayout) findViewById(R.id.tableReports);
     List<PlaceInfo> placeList = new ArrayList<>();
 
     @Override
@@ -34,11 +33,14 @@ public class Reports extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reports);
 
+        initSelected();
+
         addTableHistory();
+        placesHistoryData();
     }
 
     private void initSelected(){
-        Button btnSelected = (Button) findViewById(R.id.btnSelectedPlaces);
+        Button btnSelected = findViewById(R.id.btnSelectedPlaces);
         btnSelected.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -47,12 +49,27 @@ public class Reports extends AppCompatActivity {
                 for(History history : historyList){
                     PlaceInfo placeInfo = repo.getPlaceById(history.getPlaceId());
                     placeList.add(placeInfo);
+                    placesHistoryData();
                 }
             }
         });
     }
 
+    private void initHistory(){
+        Button btnHistory = findViewById(R.id.btnHistory);
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                placeList.clear();
+                Repository repo = new Repository(getApplication());
+                List<PlaceInfo> placeInfoList = repo.getAllPlaceInfo();
+
+            }
+        });
+    }
+
     private void addTableHistory(){
+        TableLayout tableLayout = findViewById(R.id.tableReports);
         TableRow tbRow0 = new TableRow(this);
         //Table Headers
         TextView col0 = new TextView(this);
@@ -72,6 +89,7 @@ public class Reports extends AppCompatActivity {
     }
 
     private void placesHistoryData(){
+        TableLayout tableLayout = findViewById(R.id.tableReports);
         Repository repo = new Repository(getApplication());
         List<History> history = repo.getHistory();
         List<PlaceInfo> placeInfoList = new ArrayList<>();
@@ -95,7 +113,7 @@ public class Reports extends AppCompatActivity {
     }
 
     private void addTableAll(){
-        TableLayout tableLayout = (TableLayout) findViewById(R.id.tableReports);
+        TableLayout tableLayout = findViewById(R.id.tableReports);
         TableRow tbRow0 = new TableRow(this);
         //Table Headers
         TextView col0 = new TextView(this);
@@ -111,9 +129,6 @@ public class Reports extends AppCompatActivity {
         col2.setTextColor(Color.BLACK);
         tbRow0.addView(col2);
         TextView col3 = new TextView(this);
-        col3.setText("Type");
-        col3.setTextColor(Color.BLACK);
-        tbRow0.addView(col3);
 
         tableLayout.addView(tbRow0);
     }
