@@ -18,7 +18,7 @@ public interface JsonNearbyPlacesAPI {
         30 miles away = 48280 meters
      */
 
-    @GET("json?location=-33.8670522%2C151.1957362&radius=1500&type=restaurant&key=AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw")
+    @GET("json?location=42.33461099979685%2C-83.0465496496764&radius=8000&type=restaurant&keyword=food&key=AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw")
     Call <Results> getFoodResults();
 
     @GET("json?location=-33.8670522%2C151.1957362&radius=1500&type={type}&key=AIzaSyAdTVZTSt6VA_jLNtMpDy3Ky9xqzdaCrIw")

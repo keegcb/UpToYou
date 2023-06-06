@@ -58,7 +58,9 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class PlaceChoice extends AppCompatActivity {
@@ -100,6 +102,8 @@ public class PlaceChoice extends AppCompatActivity {
         Repository repo = new Repository(getApplication());
         for(PlaceInfo place : placeList){
             repo.insertPlaceInfo(place);
+            History history = new History(1, place.getPlaceId(), Date.from(Instant.now()), false);
+            repo.insertHistory(history);
         }
         RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
         final PlaceChoiceAdapter adapter = new PlaceChoiceAdapter(this, placeList);

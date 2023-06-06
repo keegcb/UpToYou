@@ -105,12 +105,13 @@ public class Selector {
         return url;
     }
 
+    //TODO: Fix Lat & Lng values being 0 in DB
     public PlaceInfo convertNearbyPlace(NearbyPlace place){
             PlaceInfo placeInfo = new PlaceInfo(place.getPlaceId(),
                     place.getName(),
                     place.getVicinity(),
-                    place.getGeometry().getLocation().getLatitude(),
-                    place.getGeometry().getLocation().getLongitude());
+                    place.getGeometry().getLocation().getLat(),
+                    place.getGeometry().getLocation().getLng);
         return placeInfo;
     }
 

@@ -13,11 +13,13 @@ public class History {
     private int userId;
     private String placeId;
     private Date date;
+    private boolean selected;
 
-    public History(int userId, String placeId, Date date) {
+    public History(int userId, String placeId, Date date, boolean selected) {
         this.userId = userId;
         this.placeId = placeId;
         this.date = date;
+        this.selected = selected;
     }
 
     public int getHistoryId() {
@@ -52,4 +54,11 @@ public class History {
         this.userId = userId;
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }

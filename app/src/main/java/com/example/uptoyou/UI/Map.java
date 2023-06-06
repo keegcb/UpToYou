@@ -74,8 +74,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         placeLatLng = new LatLng(lat, lng);
 
         Repository repo = new Repository(getApplication());
-        History history = new History(1, placeId, Date.from(Instant.now()));
-        repo.insertHistory(history);
+        History history = new History(1, placeId, Date.from(Instant.now()), true);
+        history.setSelected(true);
+        repo.updateHistory(history);
     }
 
     private void getDeviceLocation(){
