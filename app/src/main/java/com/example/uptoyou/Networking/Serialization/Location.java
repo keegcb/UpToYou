@@ -9,10 +9,10 @@ public class Location implements Serializable
 
     @SerializedName("lat")
     @Expose
-    private Double lat;
+    private double lat;
     @SerializedName("lng")
     @Expose
-    private Double lng;
+    private double lng;
     private final static long serialVersionUID = 3099163972723140355L;
 
     /**
@@ -27,17 +27,17 @@ public class Location implements Serializable
      * @param lng
      * @param lat
      */
-    public Location(Double lat, Double lng) {
+    public Location(double lat, double lng) {
         super();
         this.lat = lat;
         this.lng = lng;
     }
 
-    public Double getLat() {
+    public double getLatitude() {
         return lat;
     }
 
-    public void setLat(Double lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
@@ -46,11 +46,11 @@ public class Location implements Serializable
         return this;
     }
 
-    public Double getLng() {
+    public double getLongitude() {
         return lng;
     }
 
-    public void setLng(Double lng) {
+    public void setLng(double lng) {
         this.lng = lng;
     }
 

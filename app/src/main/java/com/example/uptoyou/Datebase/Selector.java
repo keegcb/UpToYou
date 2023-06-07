@@ -110,8 +110,11 @@ public class Selector {
             PlaceInfo placeInfo = new PlaceInfo(place.getPlaceId(),
                     place.getName(),
                     place.getVicinity(),
-                    place.getGeometry().getLocation().getLat(),
-                    place.getGeometry().getLocation().getLng);
+                    place.getGeometry().getLocation().getLatitude(),
+                    place.getGeometry().getLocation().getLongitude());
+            System.out.println(place.getName());
+            System.out.println(place.getGeometry().getLocation().getLatitude());
+            System.out.println(place.getGeometry().getLocation().getLongitude());
         return placeInfo;
     }
 

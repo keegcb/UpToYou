@@ -44,7 +44,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         mMap = googleMap;
 
         if(mLocationPermissionsGranted){
-            getDeviceLocation();
+            moveCamera(placeLatLng, DEFAULT_ZOOM);
 
         }
     }
@@ -91,10 +91,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: Current location found.");
                             Location currentLocation = (Location) task.getResult();
-                            //LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             Log.d(TAG, "Lat: " + currentLocation.getLatitude() + ", Lng: " + currentLocation.getLongitude());
-                            //moveCamera(currentLatLng, DEFAULT_ZOOM);
-                            moveCamera(placeLatLng, DEFAULT_ZOOM);
+                            moveCamera(currentLatLng, DEFAULT_ZOOM);
                         }
                         else{
                             Log.d(TAG, "onComplete: Current location is null");
