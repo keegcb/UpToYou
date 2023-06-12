@@ -24,4 +24,10 @@ public interface HistoryDAO {
 
     @Query("SELECT * FROM History")
     List<History> getHistory();
+
+    @Query("SELECT * FROM History WHERE selected= :selected")
+    List<History> getHistoryBySelected(boolean selected);
+
+    @Query("SELECT * FROM History WHERE placeId= :placeId")
+    History getHistoryByPlace(String placeId);
 }

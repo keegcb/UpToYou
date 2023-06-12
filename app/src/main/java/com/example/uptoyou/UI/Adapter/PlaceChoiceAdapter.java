@@ -75,6 +75,7 @@ public class PlaceChoiceAdapter extends RecyclerView.Adapter<PlaceChoiceAdapter.
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     PlaceInfo place = placeList.get(position);
+
                     Main.placeList.clear();
                     Intent intent = new Intent(context, Map.class);
 

@@ -375,4 +375,36 @@ public class Repository {
         }
         return result;
     }
+
+    public List<History> getHistoryBySelected(){
+        Future<List<History>> historyFuture = databaseExecutor.submit(new Callable<List<History>>() {
+            @Override
+            public List<History> call() throws Exception {
+                return historyDAO.getHistoryBySelected(true);
+            }
+        });
+        List<History> result = null;
+        try{
+            result = historyFuture.get();
+        } catch (InterruptedException | ExecutionException e){
+            e.printStackTrace();
+        }
+        return  result;
+    }
+
+    public History getHistoryByPlace(String placeId){
+        Future<History> historyFuture = databaseExecutor.submit(new Callable<History>() {
+            @Override
+            public History call() throws Exception {
+                return historyDAO.getHistoryByPlace(placeId);
+            }
+        });
+        History result = null;
+        try{
+            result = historyFuture.get();
+        } catch (InterruptedException | ExecutionException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

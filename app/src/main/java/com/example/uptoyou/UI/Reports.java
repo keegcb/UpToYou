@@ -2,15 +2,19 @@ package com.example.uptoyou.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.uptoyou.Datebase.Repository;
 import com.example.uptoyou.Datebase.Selector;
@@ -34,6 +38,8 @@ public class Reports extends AppCompatActivity {
         setContentView(R.layout.activity_reports);
 
         initSelected();
+        initHistory();
+        initSearch();
 
         addTableHistory();
         placesHistoryData();
@@ -44,13 +50,14 @@ public class Reports extends AppCompatActivity {
         btnSelected.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                placeList.clear();
                 Repository repo = new Repository(getApplication());
-                List<History> historyList = repo.getHistory();
+                List<History> historyList = repo.getHistoryBySelected();
                 for(History history : historyList){
                     PlaceInfo placeInfo = repo.getPlaceById(history.getPlaceId());
                     placeList.add(placeInfo);
-                    placesHistoryData();
                 }
+                fillData(placeList, historyList);
             }
         });
     }
@@ -62,10 +69,79 @@ public class Reports extends AppCompatActivity {
             public void onClick(View view) {
                 placeList.clear();
                 Repository repo = new Repository(getApplication());
-                List<PlaceInfo> placeInfoList = repo.getAllPlaceInfo();
-
+                List<History> historyList = repo.getHistory();
+                for(History history : historyList){
+                    PlaceInfo placeInfo = repo.getPlaceById(history.getPlaceId());
+                    placeList.add(placeInfo);
+                }
+                fillData(placeList, historyList);
             }
         });
+    }
+
+    private void initSearch(){
+        TextView txtSearch = findViewById(R.id.txtSearch);
+        Button btnSearch = findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String searchString = txtSearch.getText().toString();
+                Repository repo = new Repository(getApplication());
+                List<History> historyList = repo.getHistory();
+                for(History history : historyList){
+                    PlaceInfo placeInfo = repo.getPlaceById(history.getPlaceId());
+                    placeList.add(placeInfo);
+                }
+                searchString = searchString.toLowerCase();
+                boolean equal = false;
+                for (int i=0; i<placeList.size(); i++){
+                    if(searchString.equals(placeList.get(i).getPlaceName().toLowerCase())){
+                        equal = true;
+                        PlaceInfo placeInfo = placeList.get(i);
+                        List<PlaceInfo> foundPlace = new ArrayList<>();
+                        foundPlace.add(placeInfo);
+                        History history = repo.getHistoryByPlace(placeInfo.getPlaceId());
+                        List<History> foundHistory = new ArrayList<>();
+                        foundHistory.add(history);
+                        fillData(foundPlace, foundHistory);
+                    }
+                    else {
+                        equal = false;
+                    }
+                }
+                if (!equal){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Reports.this);
+                    builder.setTitle("No Matching Result");
+                    builder.setMessage("There is no place in history that could be found matching your search.");
+                    builder.setCancelable(true);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(Reports.this, "Search Canceled", Toast.LENGTH_LONG).show();
+                            dialogInterface.cancel();
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            }
+        });
+    }
+
+    private void createAlert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(Reports.this);
+        builder.setTitle("No Matching Result");
+        builder.setMessage("There is no place in history that could be found matching your search.");
+        builder.setCancelable(true);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(Reports.this, "Search Canceled", Toast.LENGTH_LONG).show();
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void addTableHistory(){
@@ -92,12 +168,39 @@ public class Reports extends AppCompatActivity {
         TableLayout tableLayout = findViewById(R.id.tableReports);
         Repository repo = new Repository(getApplication());
         List<History> history = repo.getHistory();
-        List<PlaceInfo> placeInfoList = new ArrayList<>();
         for(int i=0; i<history.size(); i++){
             PlaceInfo place = repo.getPlaceById(history.get(i).getPlaceId());
             TableRow tbRow = new TableRow(this);
             TextView date = new TextView(this);
             date.setText(history.get(i).getDate().toString());
+            date.setGravity(Gravity.LEFT);
+            tbRow.addView(date);
+            TextView name = new TextView(this);
+            name.setText(place.getPlaceName());
+            name.setGravity(Gravity.LEFT);
+            tbRow.addView(name);
+            TextView address = new TextView(this);
+            address.setText(place.getAddress());
+            address.setGravity(Gravity.LEFT);
+            tbRow.addView(address);
+            tableLayout.addView(tbRow);
+        }
+    }
+
+    private void fillData(List<PlaceInfo> placeList, List<History> historyList){
+        TableLayout tableLayout = findViewById(R.id.tableReports);
+        int count = tableLayout.getChildCount();
+        for(int i=0; i<count; i++){
+            View child = tableLayout.getChildAt(i);
+            if(child instanceof TableRow)((ViewGroup) child).removeAllViews();
+        }
+        addTableHistory();
+        for(int i=0; i<placeList.size(); i++){
+            PlaceInfo place = placeList.get(i);
+            History history = historyList.get(i);
+            TableRow tbRow = new TableRow(this);
+            TextView date = new TextView(this);
+            date.setText(history.getDate().toString());
             date.setGravity(Gravity.LEFT);
             tbRow.addView(date);
             TextView name = new TextView(this);
