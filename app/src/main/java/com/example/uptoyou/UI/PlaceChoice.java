@@ -62,6 +62,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class PlaceChoice extends AppCompatActivity {
     private List<FoodPreference> foodDesired;
@@ -150,39 +151,15 @@ public class PlaceChoice extends AppCompatActivity {
     }
 
 
-    private void convertPlace(String placeId, String type) {
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,
-                Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,Place.Field.LAT_LNG, Place.Field.TYPES, Place.Field.PHOTO_METADATAS);
+    public void convertPlace(String placeId) {
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
         PlacesClient placesClient = Places.createClient(this);
         FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(placeId, fields);
         placesClient.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
             Log.i(TAG, "Place found: " + place.getName());
 
-            List<PhotoMetadata> metadata = place.getPhotoMetadatas();
-            if(metadata == null || metadata.isEmpty()){
-                Log.w(TAG, "No photo metadata.");
-                return;
-            }
-            PhotoMetadata photoMetadata = metadata.get(0);
-            String attributions = photoMetadata.getAttributions();
-            FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata).setMaxHeight(200).setMaxWidth(350).build();
-            placesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
-                Bitmap bitmap = fetchPhotoResponse.getBitmap();
-                //imageView.setImageBitmap(bitmap);
-
-                //TODO: Save image in PlaceInfo Object using... BLOB?
-
-            }).addOnFailureListener((exception) -> {
-                if(exception instanceof ApiException) {
-                    final ApiException apiException = (ApiException) exception;
-                    Log.e(TAG, "Place not found: " + exception.getMessage());
-                    final int statusCode = apiException.getStatusCode();
-                }
-            });
-
-            //convert place details into place info object
-            PlaceInfo placeInfo = new PlaceInfo(place.getId(), place.getName(), place.getAddress(), place.getLatLng().latitude, place.getLatLng().longitude);
+            PlaceInfo placeInfo = new PlaceInfo(place.getId(), place.getName(), place.getAddress(), Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
             placeOptions.add(placeInfo);
         }).addOnFailureListener((exception) -> {
             if(exception instanceof ApiException){

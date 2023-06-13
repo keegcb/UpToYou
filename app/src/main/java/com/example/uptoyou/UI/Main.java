@@ -193,6 +193,7 @@ public class Main extends AppCompatActivity {
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                /*
                 Repository repo = new Repository(getApplication());
                 List<ActivityPreference> activity = repo.getActivityDesired(true);
                 Selector select = new Selector();
@@ -204,12 +205,14 @@ public class Main extends AppCompatActivity {
                 b.putString("key2", act2);
                 intent.putExtras(b);
                 startActivity(intent);
+                 */
+                connectActivityAPI();
             }
         });
     }
 
     //TODO: Fix call so application waits for results before moving to launch activity
-    public void connectActivityAPI(String type){
+    public void connectActivityAPI(){
         Repository repo = new Repository(getApplication());
         List<ActivityPreference> activityDesired = repo.getActivityDesired(true);
         Retrofit retrofit = new Retrofit.Builder()
@@ -220,7 +223,7 @@ public class Main extends AppCompatActivity {
         Selector selector = new Selector();
         do{
             String activityType = selector.activitySelection(activityDesired);
-            Call<Results> call = jsonNearbyPlacesAPI.getActivityResults(type);
+            Call<Results> call = jsonNearbyPlacesAPI.getActivityResults(activityType);
             call.enqueue(new Callback<Results>() {
                 @Override
                 public void onResponse(Call<Results> call, Response<Results> response) {

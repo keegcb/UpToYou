@@ -40,6 +40,7 @@ public class Reports extends AppCompatActivity {
         initSelected();
         initHistory();
         initSearch();
+        initDelete();
 
         addTableHistory();
         placesHistoryData();
@@ -126,6 +127,41 @@ public class Reports extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void initDelete(){
+        Repository repo = new Repository(getApplication());
+        List<History> history = repo.getHistory();
+        Button btnDelete = findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Reports.this);
+                builder.setTitle("Delete Place History");
+                builder.setMessage("Are you sure you would like to delete the place history?");
+                builder.setCancelable(true);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        for(int j=0; j<history.size(); j++){
+                            repo.deleteHistory(history.get(j));
+                        }
+                        Toast.makeText(Reports.this, "History Deleted", Toast.LENGTH_LONG).show();
+                        dialogInterface.cancel();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(Reports.this, "Delete Action Canceled", Toast.LENGTH_LONG).show();
+                        dialogInterface.cancel();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+
     }
 
     private void createAlert(){
