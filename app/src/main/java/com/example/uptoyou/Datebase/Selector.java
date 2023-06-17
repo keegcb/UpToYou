@@ -45,7 +45,8 @@ public class Selector {
         return search;
     }
 
-    public String activitySelection(List<ActivityPreference> activityPrefs){
+    public int activitySelection(List<ActivityPreference> activityPrefs){
+        int activity = 0;
         String search = "";
         List<ActivityPreference> activityPref = activityPrefs;
         int listSize = activityPref.size();
@@ -57,9 +58,10 @@ public class Selector {
             if(i == randNum){
                 activityPreference = activityPref.get(i);
                 search = activityPreference.getActivityName();
+                activity = activityPreference.getActivityId();
             }
         }
-        return search;
+        return activity;
     }
 
     public String randomSelector(List<FoodPreference> food, List<ActivityPreference> activity){

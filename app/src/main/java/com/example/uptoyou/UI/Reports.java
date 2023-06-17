@@ -94,36 +94,62 @@ public class Reports extends AppCompatActivity {
                     placeList.add(placeInfo);
                 }
                 searchString = searchString.toLowerCase();
-                boolean equal = false;
-                for (int i=0; i<placeList.size(); i++){
-                    if(searchString.equals(placeList.get(i).getPlaceName().toLowerCase())){
-                        equal = true;
-                        PlaceInfo placeInfo = placeList.get(i);
-                        List<PlaceInfo> foundPlace = new ArrayList<>();
-                        foundPlace.add(placeInfo);
-                        History history = repo.getHistoryByPlace(placeInfo.getPlaceId());
-                        List<History> foundHistory = new ArrayList<>();
-                        foundHistory.add(history);
-                        fillData(foundPlace, foundHistory);
-                    }
-                    else {
-                        equal = false;
-                    }
-                }
-                if (!equal){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Reports.this);
-                    builder.setTitle("No Matching Result");
-                    builder.setMessage("There is no place in history that could be found matching your search.");
-                    builder.setCancelable(true);
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(Reports.this, "Search Canceled", Toast.LENGTH_LONG).show();
-                            dialogInterface.cancel();
+                if(searchString.equals("food")){
+                    List<PlaceInfo> foodPlaces = new ArrayList<>();
+                    List<History> foodHistory = new ArrayList<>();
+                    for(History history : historyList){
+                        if (history.isFood()){
+                            PlaceInfo placeInfo = repo.getPlaceById(history.getPlaceId());
+                            foodPlaces.add(placeInfo);
+                            foodHistory.add(history);
                         }
-                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                    }
+                    fillData(foodPlaces, foodHistory);
+                }
+                else if(searchString.equals("activity")){
+                    List<PlaceInfo> activityPlaces = new ArrayList<>();
+                    List<History> activityHistory = new ArrayList<>();
+                    for(History history : historyList){
+                        if (!history.isFood()){
+                            PlaceInfo placeInfo = repo.getPlaceById(history.getPlaceId());
+                            activityPlaces.add(placeInfo);
+                            activityHistory.add(history);
+                        }
+                    }
+                    fillData(activityPlaces, activityHistory);
+                }
+                else {
+                    boolean equal = false;
+                    for (int i=0; i<placeList.size(); i++){
+                        if(searchString.equals(placeList.get(i).getPlaceName().toLowerCase())){
+                            equal = true;
+                            PlaceInfo placeInfo = placeList.get(i);
+                            List<PlaceInfo> foundPlace = new ArrayList<>();
+                            foundPlace.add(placeInfo);
+                            History history = repo.getHistoryByPlace(placeInfo.getPlaceId());
+                            List<History> foundHistory = new ArrayList<>();
+                            foundHistory.add(history);
+                            fillData(foundPlace, foundHistory);
+                        }
+                        else {
+                            equal = false;
+                        }
+                    }
+                    if (!equal){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Reports.this);
+                        builder.setTitle("No Matching Result");
+                        builder.setMessage("There is no place in history that could be found matching your search.");
+                        builder.setCancelable(true);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Toast.makeText(Reports.this, "Search Canceled", Toast.LENGTH_LONG).show();
+                                dialogInterface.cancel();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
                 }
             }
         });

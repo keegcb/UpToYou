@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.uptoyou.Datebase.Repository;
 import com.example.uptoyou.Datebase.Selector;
 import com.example.uptoyou.Entity.ActivityPreference;
 import com.example.uptoyou.Entity.FoodPreference;
+import com.example.uptoyou.Entity.History;
 import com.example.uptoyou.Entity.PlaceInfo;
 import com.example.uptoyou.Entity.Preference;
 import com.example.uptoyou.Entity.User;
@@ -26,6 +28,8 @@ import com.example.uptoyou.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import java.sql.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -63,6 +67,7 @@ public class Main extends AppCompatActivity {
             initData();
             initReport();
         }
+        configureDatabase();
     }
 
     private void initPlace() {
@@ -143,7 +148,7 @@ public class Main extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         jsonNearbyPlacesAPI = retrofit.create(JsonNearbyPlacesAPI.class);
-        Call<Results> call = jsonNearbyPlacesAPI.getFoodResults();
+        Call<Results> call = jsonNearbyPlacesAPI.getFoodResults2();
         //TODO: Toast message attempt to connect to AIP
         call.enqueue(new Callback<Results>() {
             @Override
@@ -169,6 +174,7 @@ public class Main extends AppCompatActivity {
                     }
                 }while(placeList.size() < 2);
                 Intent intent = new Intent(Main.this, PlaceChoice.class);
+                intent.putExtra("food", 1);
                 startActivity(intent);
             }
             @Override
@@ -221,9 +227,39 @@ public class Main extends AppCompatActivity {
                 .build();
         jsonNearbyPlacesAPI = retrofit.create(JsonNearbyPlacesAPI.class);
         Selector selector = new Selector();
-        do{
-            String activityType = selector.activitySelection(activityDesired);
-            Call<Results> call = jsonNearbyPlacesAPI.getActivityResults(activityType);
+            int activity = selector.activitySelection(activityDesired);
+            Call <Results> call = jsonNearbyPlacesAPI.getActivityTourist();
+            switch (activity){
+                case 1: call = jsonNearbyPlacesAPI.getActivityAmusement();
+                    break;
+                case 2: call = jsonNearbyPlacesAPI.getActivityAquarium();
+                    break;
+                case 3: call = jsonNearbyPlacesAPI.getActivityArt();
+                    break;
+                case 4: call = jsonNearbyPlacesAPI.getActivityBowling();
+                    break;
+                case 5: call = jsonNearbyPlacesAPI.getActivityCasino();
+                    break;
+                case 6: call = jsonNearbyPlacesAPI.getActivityClothing();
+                    break;
+                case 7: call = jsonNearbyPlacesAPI.getActivityMovie();
+                    break;
+                case 8: call = jsonNearbyPlacesAPI.getActivityMuseum();
+                    break;
+                case 9: call = jsonNearbyPlacesAPI.getActivityClub();
+                    break;
+                case 10: call = jsonNearbyPlacesAPI.getActivityPark();
+                    break;
+                case 11: call = jsonNearbyPlacesAPI.getActivityMall();
+                    break;
+                case 12: call = jsonNearbyPlacesAPI.getActivitySpa();
+                    break;
+                case 13: call = jsonNearbyPlacesAPI.getActivityTourist();
+                    break;
+                case 14: call = jsonNearbyPlacesAPI.getActivityZoo();
+                    break;
+                default: call = jsonNearbyPlacesAPI.getActivityTourist();
+            }
             call.enqueue(new Callback<Results>() {
                 @Override
                 public void onResponse(Call<Results> call, Response<Results> response) {
@@ -243,6 +279,8 @@ public class Main extends AppCompatActivity {
                               Selector selector = new Selector();
                               PlaceInfo placeInfo = selector.convertNearbyPlace(place);
                               placeList.add(placeInfo);
+                             Intent intent = new Intent(Main.this, PlaceChoice.class);
+                             startActivity(intent);
                          }
                     }
                 }
@@ -261,32 +299,6 @@ public class Main extends AppCompatActivity {
                     dialog.show();
                 }
             });
-
-        }
-        while(placeList.size()<2);
-        Intent intent = new Intent(Main.this, PlaceChoice.class);
-        startActivity(intent);
-    }
-
-    private void initRandom(){
-        Button btnFood = findViewById(R.id.btnRandom);
-        btnFood.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Repository repo = new Repository(getApplication());
-                List<FoodPreference> foodPref = repo.getFoodDesired(true);
-                List<ActivityPreference> activityPref = repo.getActivityDesired(true);
-                Selector select = new Selector();
-                String food = select.foodSelection(foodPref);
-                String activity = select.activitySelection(activityPref);
-                Intent intent = new Intent(Main.this, PlaceChoice.class);
-                Bundle b = new Bundle();
-                b.putString("key1", food);
-                b.putString("key2", activity);
-                intent.putExtras(b);
-                startActivity(intent);
-            }
-        });
     }
 
     private void initReport(){
@@ -300,94 +312,130 @@ public class Main extends AppCompatActivity {
         });
     }
 
+    private void configureDatabase(){
+        Repository repo = new Repository(getApplication());
+        User user = new User("user", 1, 42.33461099979685, -83.0465496496764);
+        Preference preference = new Preference(20);
+        preference.setPreferenceId(1);
+
+        //Food Preference Settings
+        FoodPreference american = new FoodPreference(1, 1,"American", true, 0);
+        FoodPreference bbq = new FoodPreference(1, 2,"BBQ", true, 0);
+        FoodPreference chinese = new FoodPreference(1, 3,"Chinese", true, 0);
+        FoodPreference french = new FoodPreference(1, 4,"French", true, 0);
+        FoodPreference hamburger = new FoodPreference(1, 5,"Hamburger", true, 0);
+        FoodPreference indian = new FoodPreference(1, 6,"Indian", true, 0);
+        FoodPreference italian = new FoodPreference(1, 7,"Italian", true, 0);
+        FoodPreference japanese = new FoodPreference(1, 8,"Japanese", true, 0);
+        FoodPreference mexican = new FoodPreference(1, 9,"Mexican", true, 0);
+        FoodPreference pizza = new FoodPreference(1, 10,"Pizza", true, 0);
+        FoodPreference seafood = new FoodPreference(1, 11,"Seafood", true, 0);
+        FoodPreference steak = new FoodPreference(1, 12,"Steak", true, 0);
+        FoodPreference sushi = new FoodPreference(1, 13,"Sushi", true, 0);
+        FoodPreference thai = new FoodPreference(1, 14,"Thai", true, 0);
+        //Activity Preference Settings
+        ActivityPreference amusement_park = new ActivityPreference(1, 1,"Amusement Park", true, 0);
+        ActivityPreference aquarium = new ActivityPreference(1, 2,"Aquarium", true, 0);
+        ActivityPreference art_gallery = new ActivityPreference(1, 3,"Art Gallery", true, 0);
+        ActivityPreference bowling = new ActivityPreference(1, 4,"Bowling", true, 0);
+        ActivityPreference casino = new ActivityPreference(1, 5,"Casino", true, 0);
+        ActivityPreference clothing_store = new ActivityPreference(1, 6,"Clothing Store", true, 0);
+        ActivityPreference movie_theater = new ActivityPreference(1, 7, "Movie Theater", true, 0);
+        ActivityPreference museum = new ActivityPreference(1, 8,"Museum", true, 0);
+        ActivityPreference night_club = new ActivityPreference(1, 9,"Night Club", true, 0);
+        ActivityPreference park = new ActivityPreference(1, 10,"Park", true, 0);
+        ActivityPreference shopping_mall = new ActivityPreference(1, 11,"Shopping Mall", true, 0);
+        ActivityPreference spa = new ActivityPreference(1, 12,"Spa", true, 0);
+        ActivityPreference tourist_attraction = new ActivityPreference(1, 13,"Tourist Attraction", true, 0);
+        ActivityPreference zoo = new ActivityPreference(1, 14,"Zoo", true, 0);
+
+        repo.insertUser(user);
+        repo.insertPreference(preference);
+        repo.insertFoodPreference(american);
+        repo.insertFoodPreference(bbq);
+        repo.insertFoodPreference(chinese);
+        repo.insertFoodPreference(french);
+        repo.insertFoodPreference(hamburger);
+        repo.insertFoodPreference(indian);
+        repo.insertFoodPreference(italian);
+        repo.insertFoodPreference(japanese);
+        repo.insertFoodPreference(mexican);
+        repo.insertFoodPreference(pizza);
+        repo.insertFoodPreference(seafood);
+        repo.insertFoodPreference(steak);
+        repo.insertFoodPreference(sushi);
+        repo.insertFoodPreference(thai);
+
+        repo.insertActivityPreference(amusement_park);
+        repo.insertActivityPreference(aquarium);
+        repo.insertActivityPreference(art_gallery);
+        repo.insertActivityPreference(bowling);
+        repo.insertActivityPreference(casino);
+        repo.insertActivityPreference(clothing_store);
+        repo.insertActivityPreference(movie_theater);
+        repo.insertActivityPreference(museum);
+        repo.insertActivityPreference(night_club);
+        repo.insertActivityPreference(park);
+        repo.insertActivityPreference(shopping_mall);
+        repo.insertActivityPreference(spa);
+        repo.insertActivityPreference(tourist_attraction);
+        repo.insertActivityPreference(zoo);
+    }
+
     private void initData(){
         Button btnData = findViewById(R.id.btnData);
         btnData.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 Repository repo = new Repository(getApplication());
-                User user = new User("user", 1, 42.33461099979685, -83.0465496496764);
-                Preference preference = new Preference(20);
-                preference.setPreferenceId(1);
+                //Create place info data
+                PlaceInfo place1 = new PlaceInfo("ChIJK0BlbjAtO4gR-6KVDtss8Aw", "American Coney Island",
+                        "114 West Lafayette Boulevard, Detroit", 42.3315160999999, -83.0486713);
+                PlaceInfo place2 = new PlaceInfo("ChIJgVEtgSgtO4gR26c1oo9NbtY", "Andiamo Detroit Riverfront",
+                        "400 Renaissance Center A-03, Detroit", 42.3282595, -83.0394295999999);
+                PlaceInfo place3 = new PlaceInfo("ChIJJau6CLnSJIgRCEVudU_RXbE", "Museum of Contemporary Art Detroit",
+                        "4454 Woodward Avenue, Detroit", 42.3535866999999, -83.0618497999999);
+                PlaceInfo place4 = new PlaceInfo("ChIJ5zhKUb7SJIgR8KEEmAw0q3k", "Charles H. Wright Museum of African American History",
+                        "315 East Warren Avenue, Detroit", 42.358777, -83.0609516);
+                PlaceInfo place5 = new PlaceInfo("ChIJVd4y1bnSJIgRZzTakau0PS4", "Garden Bowl",
+                        "4140 Woodward Avenue, Detroit", 42.351157, -83.060051);
+                PlaceInfo place6 = new PlaceInfo("ChIJs4nAZVjNJIgRMESotwiZwec", "Woodbridge Pub",
+                        "5169 Trumbull, Detroit", 42.3540171, -83.0801359);
+                repo.insertPlaceInfo(place1);
+                repo.insertPlaceInfo(place2);
+                repo.insertPlaceInfo(place3);
+                repo.insertPlaceInfo(place4);
+                repo.insertPlaceInfo(place5);
+                repo.insertPlaceInfo(place6);
+                //Create history data
+                History history1 = new History(1, "ChIJK0BlbjAtO4gR-6KVDtss8Aw", Date.from(Instant.now()));
+                history1.setFood(true);
+                History history2 = new History(1, "ChIJgVEtgSgtO4gR26c1oo9NbtY", Date.from(Instant.now()));
+                history2.setFood(true);
+                History history3 = new History(1, "ChIJJau6CLnSJIgRCEVudU_RXbE", Date.from(Instant.now()));
+                history3.setFood(false);
+                History history4 = new History(1, "ChIJK0BlbjAtO4gR-6KVDtss8Aw", Date.from(Instant.now()));
+                history4.setFood(true);
+                History history5 = new History(1, "ChIJ5zhKUb7SJIgR8KEEmAw0q3k", Date.from(Instant.now()));
+                history5.setFood(false);
+                History history6 = new History(1, "ChIJVd4y1bnSJIgRZzTakau0PS4", Date.from(Instant.now()));
+                history6.setFood(false);
+                History history7 = new History(1, "ChIJJau6CLnSJIgRCEVudU_RXbE", Date.from(Instant.now()));
+                history7.setFood(false);
+                History history8 = new History(1, "ChIJs4nAZVjNJIgRMESotwiZwec", Date.from(Instant.now()));
+                history8.setFood(true);
+                History history9 = new History(1, "ChIJK0BlbjAtO4gR-6KVDtss8Aw", Date.from(Instant.now()));
+                history9.setFood(true);
+                repo.insertHistory(history1);
+                repo.insertHistory(history2);
+                repo.insertHistory(history3);
+                repo.insertHistory(history4);
+                repo.insertHistory(history5);
+                repo.insertHistory(history6);
+                repo.insertHistory(history7);
+                repo.insertHistory(history8);
+                repo.insertHistory(history9);
 
-                //Food Preference Settings
-                FoodPreference american = new FoodPreference(1, 1,"American", true, 0);
-                FoodPreference bbq = new FoodPreference(1, 2,"BBQ", true, 0);
-                FoodPreference chinese = new FoodPreference(1, 3,"Chinese", true, 0);
-                FoodPreference french = new FoodPreference(1, 4,"French", true, 0);
-                FoodPreference hamburger = new FoodPreference(1, 5,"Hamburger", true, 0);
-                FoodPreference indian = new FoodPreference(1, 6,"Indian", true, 0);
-                FoodPreference italian = new FoodPreference(1, 7,"Italian", true, 0);
-                FoodPreference japanese = new FoodPreference(1, 8,"Japanese", true, 0);
-                FoodPreference mexican = new FoodPreference(1, 9,"Mexican", true, 0);
-                FoodPreference pizza = new FoodPreference(1, 10,"Pizza", true, 0);
-                FoodPreference seafood = new FoodPreference(1, 11,"Seafood", true, 0);
-                FoodPreference steak = new FoodPreference(1, 12,"Steak", true, 0);
-                FoodPreference sushi = new FoodPreference(1, 13,"Sushi", true, 0);
-                FoodPreference thai = new FoodPreference(1, 14,"Thai", true, 0);
-                //Activity Preference Settings
-                ActivityPreference arcade = new ActivityPreference(1, 1,"Arcade", true, 0);
-                ActivityPreference axe_throwing = new ActivityPreference(1, 2,"Axe Throwing", true, 0);
-                ActivityPreference beach = new ActivityPreference(1, 3,"Beach", true, 0);
-                ActivityPreference bowling = new ActivityPreference(1, 4,"Bowling", true, 0);
-                ActivityPreference casino = new ActivityPreference(1, 5,"Casino", true, 0);
-                ActivityPreference disk_golf = new ActivityPreference(1, 6,"Disk Golf", true, 0);
-                ActivityPreference escape_room = new ActivityPreference(1, 7, "Escape Room", true, 0);
-                ActivityPreference garden = new ActivityPreference(1, 8,"Garden", true, 0);
-                ActivityPreference golf = new ActivityPreference(1, 9,"Golf", true, 0);
-                ActivityPreference library = new ActivityPreference(1, 10,"Library", true, 0);
-                ActivityPreference hiking = new ActivityPreference(1, 11,"Hiking", true, 0);
-                ActivityPreference mini_golf = new ActivityPreference(1, 12,"Mini Golf", true, 0);
-                ActivityPreference movie_rental = new ActivityPreference(1, 13,"Movie Rental", true, 0);
-                ActivityPreference movie_theater = new ActivityPreference(1, 14,"Movie Theater", true, 0);
-                ActivityPreference museum = new ActivityPreference(1, 15,"Museum", true, 0);
-                ActivityPreference park = new ActivityPreference(1, 16,"Park", true, 0);
-                ActivityPreference rage_room = new ActivityPreference(1, 17,"Rage Room", true, 0);
-                ActivityPreference shopping_mall = new ActivityPreference(1, 18,"Shopping Mall", true, 0);
-                ActivityPreference spa = new ActivityPreference(1, 19,"Spa", true, 0);
-                ActivityPreference theme_park = new ActivityPreference(1, 20,"Theme Park", true, 0);
-                ActivityPreference tourist_attraction = new ActivityPreference(1, 21,"Tourist Attraction", true, 0);
-                ActivityPreference zoo = new ActivityPreference(1, 22,"Zoo", true, 0);
-
-                repo.insertUser(user);
-                repo.insertPreference(preference);
-                repo.insertFoodPreference(american);
-                repo.insertFoodPreference(bbq);
-                repo.insertFoodPreference(chinese);
-                repo.insertFoodPreference(french);
-                repo.insertFoodPreference(hamburger);
-                repo.insertFoodPreference(indian);
-                repo.insertFoodPreference(italian);
-                repo.insertFoodPreference(japanese);
-                repo.insertFoodPreference(mexican);
-                repo.insertFoodPreference(pizza);
-                repo.insertFoodPreference(seafood);
-                repo.insertFoodPreference(steak);
-                repo.insertFoodPreference(sushi);
-                repo.insertFoodPreference(thai);
-
-                repo.insertActivityPreference(arcade);
-                repo.insertActivityPreference(axe_throwing);
-                repo.insertActivityPreference(beach);
-                repo.insertActivityPreference(bowling);
-                repo.insertActivityPreference(casino);
-                repo.insertActivityPreference(disk_golf);
-                repo.insertActivityPreference(escape_room);
-                repo.insertActivityPreference(garden);
-                repo.insertActivityPreference(golf);
-                repo.insertActivityPreference(library);
-                repo.insertActivityPreference(hiking);
-                repo.insertActivityPreference(mini_golf);
-                repo.insertActivityPreference(movie_rental);
-                repo.insertActivityPreference(movie_theater);
-                repo.insertActivityPreference(museum);
-                repo.insertActivityPreference(park);
-                repo.insertActivityPreference(rage_room);
-                repo.insertActivityPreference(shopping_mall);
-                repo.insertActivityPreference(spa);
-                repo.insertActivityPreference(theme_park);
-                repo.insertActivityPreference(tourist_attraction);
-                repo.insertActivityPreference(zoo);
             }
         });
     }

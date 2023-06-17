@@ -159,7 +159,7 @@ public class PlaceSelection extends AppCompatActivity implements OnMapReadyCallb
             case 2:
                 choiceIndicatorId = 2;
                 activityDesired = repo.getActivityDesired(true);
-                search = select.activitySelection(activityDesired);
+                //search = select.activitySelection(activityDesired);
                 //Add Place Detail search logic for place selection
                 break;
             case 3:

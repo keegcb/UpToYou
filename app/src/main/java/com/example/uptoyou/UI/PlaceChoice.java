@@ -99,11 +99,17 @@ public class PlaceChoice extends AppCompatActivity {
         Places.initialize(getApplicationContext(), apiKey);
         placesClient = Places.createClient(this);
 
+        int foodBool = getIntent().getIntExtra("food", 1);
         List<PlaceInfo> placeList = Main.placeList;
         Repository repo = new Repository(getApplication());
         for(PlaceInfo place : placeList){
             repo.insertPlaceInfo(place);
-            History history = new History(1, place.getPlaceId(), Date.from(Instant.now()), false);
+            History history = new History(1, place.getPlaceId(), Date.from(Instant.now()));
+            if(foodBool == 1){
+                history.setFood(true);
+            } else {
+                history.setFood(false);
+            }
             repo.insertHistory(history);
         }
         RecyclerView mRecyclerView = findViewById(R.id.recyclerView);

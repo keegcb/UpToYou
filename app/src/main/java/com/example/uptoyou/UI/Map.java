@@ -105,7 +105,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
 
         Repository repo = new Repository(getApplication());
         History history = repo.getHistoryByPlace(placeId);
-        history.setSelected(true);
+        history.setFood(true);
         repo.updateHistory(history);
     }
 

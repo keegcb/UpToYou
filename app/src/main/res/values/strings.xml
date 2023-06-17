@@ -19,26 +19,18 @@
         <item>Thai</item>
     </string-array>
     <string-array name="activity">
-        <item>Arcade</item>
-        <item>Axe Throwing</item>
-        <item>Beach</item>
+        <item>Amusement Park</item>
+        <item>Aquarium</item>
+        <item>Art Gallery</item>
         <item>Bowling</item>
         <item>Casino</item>
-        <item>Disk Golf</item>
-        <item>Escape Room</item>
-        <item>Garden</item>
-        <item>Golf</item>
-        <item>Library</item>
-        <item>Hiking</item>
-        <item>Mini Golf</item>
-        <item>Movie Rental</item>
+        <item>Clothing Store</item>
         <item>Movie Theater</item>
         <item>Museum</item>
+        <item>Night Club</item>
         <item>Park</item>
-        <item>Rage Room</item>
         <item>Shopping Mall</item>
         <item>Spa</item>
-        <item>Theme Park</item>
         <item>Tourist Attraction</item>
         <item>Zoo</item>
     </string-array>
@@ -46,7 +38,7 @@
         <item>5</item>
         <item>10</item>
         <item>20</item>
-        <item>50</item>
+        <item>30</item>
     </string-array>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
