@@ -113,7 +113,7 @@ public class Selector {
                     place.getName(),
                     place.getVicinity(),
                     place.getGeometry().getLocation().getLatitude(),
-                    place.getGeometry().getLocation().getLongitude());
+                    place.getGeometry().getLocation().getLatitude());
             System.out.println(place.getName());
             System.out.println(place.getGeometry().getLocation().getLatitude());
             System.out.println(place.getGeometry().getLocation().getLongitude());

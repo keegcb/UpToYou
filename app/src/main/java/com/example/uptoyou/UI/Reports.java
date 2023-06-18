@@ -37,30 +37,12 @@ public class Reports extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reports);
 
-        initSelected();
         initHistory();
         initSearch();
         initDelete();
 
         addTableHistory();
         placesHistoryData();
-    }
-
-    private void initSelected(){
-        Button btnSelected = findViewById(R.id.btnSelectedPlaces);
-        btnSelected.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                placeList.clear();
-                Repository repo = new Repository(getApplication());
-                List<History> historyList = repo.getHistoryBySelected();
-                for(History history : historyList){
-                    PlaceInfo placeInfo = repo.getPlaceById(history.getPlaceId());
-                    placeList.add(placeInfo);
-                }
-                fillData(placeList, historyList);
-            }
-        });
     }
 
     private void initHistory(){

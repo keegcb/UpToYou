@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uptoyou.Datebase.Repository;
 import com.example.uptoyou.Entity.PlaceInfo;
+import com.example.uptoyou.Networking.DownloadImageTask;
 import com.example.uptoyou.R;
 import com.example.uptoyou.UI.Main;
 import com.example.uptoyou.UI.Map;
@@ -46,7 +47,7 @@ public class PlaceChoiceAdapter extends RecyclerView.Adapter<PlaceChoiceAdapter.
         holder.name.setText(place.getPlaceName());
         holder.address.setText(place.getAddress());
 
-
+        new DownloadImageTask(holder.photo).execute(place.getIcon());
     }
 
     @Override
@@ -56,18 +57,14 @@ public class PlaceChoiceAdapter extends RecyclerView.Adapter<PlaceChoiceAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         TextView name;
-        TextView type;
         TextView address;
-        TextView website;
         ImageView photo;
 
         public MyViewHolder(@NonNull View itemView){
             super(itemView);
 
             name = itemView.findViewById(R.id.txtPlaceName);
-            type = itemView.findViewById(R.id.txtPlaceType);
             address = itemView.findViewById(R.id.txtPlaceAddress);
-            website = itemView.findViewById(R.id.txtPlaceWebsite);
             photo = itemView.findViewById(R.id.imgPlacePhoto);
 
             itemView.setOnClickListener(new View.OnClickListener() {

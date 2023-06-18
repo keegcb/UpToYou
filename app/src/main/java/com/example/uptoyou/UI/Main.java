@@ -167,8 +167,10 @@ public class Main extends AppCompatActivity {
                     for(int i=0; i<listSize; i++){
                         if(i == randNum){
                             NearbyPlace place = nearbyPlaces.get(i);
+                            System.out.println(place);
                             Selector selector = new Selector();
                             PlaceInfo placeInfo = selector.convertNearbyPlace(place);
+                            placeInfo.setIcon(place.getIcon());
                             placeList.add(placeInfo);
                         }
                     }
@@ -256,8 +258,11 @@ public class Main extends AppCompatActivity {
                     break;
                 case 13: call = jsonNearbyPlacesAPI.getActivityTourist();
                     break;
+                    /*
                 case 14: call = jsonNearbyPlacesAPI.getActivityZoo();
                     break;
+
+                     */
                 default: call = jsonNearbyPlacesAPI.getActivityTourist();
             }
             call.enqueue(new Callback<Results>() {
@@ -347,7 +352,7 @@ public class Main extends AppCompatActivity {
         ActivityPreference shopping_mall = new ActivityPreference(1, 11,"Shopping Mall", true, 0);
         ActivityPreference spa = new ActivityPreference(1, 12,"Spa", true, 0);
         ActivityPreference tourist_attraction = new ActivityPreference(1, 13,"Tourist Attraction", true, 0);
-        ActivityPreference zoo = new ActivityPreference(1, 14,"Zoo", true, 0);
+        //ActivityPreference zoo = new ActivityPreference(1, 14,"Zoo", true, 0);
 
         repo.insertUser(user);
         repo.insertPreference(preference);
@@ -379,7 +384,7 @@ public class Main extends AppCompatActivity {
         repo.insertActivityPreference(shopping_mall);
         repo.insertActivityPreference(spa);
         repo.insertActivityPreference(tourist_attraction);
-        repo.insertActivityPreference(zoo);
+        //repo.insertActivityPreference(zoo);
     }
 
     private void initData(){

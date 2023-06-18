@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="12dp"
     android:layout_marginTop="8dp"
@@ -29,32 +29,20 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="Location Name"
-            android:textSize="24sp"
+            android:textSize="34sp"
             app:autoSizeTextType="uniform"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/txtPlaceType"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="Place Type"
-            app:layout_constraintEnd_toEndOf="@id/txtPlaceName"
-            app:layout_constraintStart_toStartOf="@id/txtPlaceName"
-            app:layout_constraintTop_toBottomOf="@id/txtPlaceName" />
-
         <ImageView
             android:id="@+id/imgPlacePhoto"
-            android:layout_width="360dp"
+            android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/txtPlaceName"
             app:layout_constraintStart_toStartOf="@+id/txtPlaceName"
-            app:layout_constraintTop_toBottomOf="@+id/txtPlaceType"
+            app:layout_constraintTop_toBottomOf="@+id/txtPlaceName"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
@@ -64,24 +52,13 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="Address"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgPlacePhoto" />
-
-        <TextView
-            android:id="@+id/txtPlaceWebsite"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Website"
+            android:text="Address"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtPlaceAddress" />
+            app:layout_constraintTop_toBottomOf="@+id/imgPlacePhoto" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,6 +20,7 @@ public class PlaceInfo {
     private String address;
     private double lat;
     private double lng;
+    private String icon;
 
 
     public PlaceInfo(String placeId, String placeName, String address, double lat, double lng){
@@ -68,5 +69,13 @@ public class PlaceInfo {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

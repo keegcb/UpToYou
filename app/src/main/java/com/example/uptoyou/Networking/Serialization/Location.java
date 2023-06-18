@@ -41,7 +41,7 @@ public class Location implements Serializable
         this.lat = lat;
     }
 
-    public Location withLat(Double lat) {
+    public Location withLat(double lat) {
         this.lat = lat;
         return this;
     }
@@ -54,7 +54,7 @@ public class Location implements Serializable
         this.lng = lng;
     }
 
-    public Location withLng(Double lng) {
+    public Location withLng(double lng) {
         this.lng = lng;
         return this;
     }
