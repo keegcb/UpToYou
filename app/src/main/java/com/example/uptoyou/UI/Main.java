@@ -56,8 +56,6 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         if(correctServices()){
             initMap();
             initPlace();
@@ -129,27 +127,22 @@ public class Main extends AppCompatActivity {
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-/*
-                Repository repo = new Repository(getApplication());
-                List<FoodPreference> food = repo.getFoodDesired(true);
-                Selector selector = new Selector();
-                String food1 = selector.foodSelection(food);
-                String food2 = selector.foodSelection(food);
-                
- */
                 connectFoodAPI();
             }
         });
     }
 
     public void connectFoodAPI(){
+        Repository repo = new Repository(getApplication());
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         jsonNearbyPlacesAPI = retrofit.create(JsonNearbyPlacesAPI.class);
-        Call<Results> call = jsonNearbyPlacesAPI.getFoodResults2();
-        //TODO: Toast message attempt to connect to AIP
+        Preference preference = repo.getPreferenceById(1);
+        int distance = preference.getDistance();
+        Selector selector = new Selector();
+        Call<Results> call = selector.foodSelector(jsonNearbyPlacesAPI, distance);
         call.enqueue(new Callback<Results>() {
             @Override
             public void onResponse(Call<Results> call, Response<Results> response) {
@@ -201,19 +194,6 @@ public class Main extends AppCompatActivity {
         btnFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                /*
-                Repository repo = new Repository(getApplication());
-                List<ActivityPreference> activity = repo.getActivityDesired(true);
-                Selector select = new Selector();
-                String act1 = select.activitySelection(activity);
-                String act2 = select.activitySelection(activity);
-                Intent intent = new Intent(Main.this, PlaceChoice.class);
-                Bundle b = new Bundle();
-                b.putString("key1", act1);
-                b.putString("key2", act2);
-                intent.putExtras(b);
-                startActivity(intent);
-                 */
                 connectActivityAPI();
             }
         });
@@ -222,6 +202,8 @@ public class Main extends AppCompatActivity {
     //TODO: Fix call so application waits for results before moving to launch activity
     public void connectActivityAPI(){
         Repository repo = new Repository(getApplication());
+        Preference preference = repo.getPreferenceById(1);
+        int distance = preference.getDistance();
         List<ActivityPreference> activityDesired = repo.getActivityDesired(true);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
@@ -231,40 +213,7 @@ public class Main extends AppCompatActivity {
         Selector selector = new Selector();
             int activity = selector.activitySelection(activityDesired);
             Call <Results> call = jsonNearbyPlacesAPI.getActivityTourist();
-            switch (activity){
-                case 1: call = jsonNearbyPlacesAPI.getActivityAmusement();
-                    break;
-                case 2: call = jsonNearbyPlacesAPI.getActivityAquarium();
-                    break;
-                case 3: call = jsonNearbyPlacesAPI.getActivityArt();
-                    break;
-                case 4: call = jsonNearbyPlacesAPI.getActivityBowling();
-                    break;
-                case 5: call = jsonNearbyPlacesAPI.getActivityCasino();
-                    break;
-                case 6: call = jsonNearbyPlacesAPI.getActivityClothing();
-                    break;
-                case 7: call = jsonNearbyPlacesAPI.getActivityMovie();
-                    break;
-                case 8: call = jsonNearbyPlacesAPI.getActivityMuseum();
-                    break;
-                case 9: call = jsonNearbyPlacesAPI.getActivityClub();
-                    break;
-                case 10: call = jsonNearbyPlacesAPI.getActivityPark();
-                    break;
-                case 11: call = jsonNearbyPlacesAPI.getActivityMall();
-                    break;
-                case 12: call = jsonNearbyPlacesAPI.getActivitySpa();
-                    break;
-                case 13: call = jsonNearbyPlacesAPI.getActivityTourist();
-                    break;
-                    /*
-                case 14: call = jsonNearbyPlacesAPI.getActivityZoo();
-                    break;
-
-                     */
-                default: call = jsonNearbyPlacesAPI.getActivityTourist();
-            }
+            call = selector.activitySelector(jsonNearbyPlacesAPI, activity, distance);
             call.enqueue(new Callback<Results>() {
                 @Override
                 public void onResponse(Call<Results> call, Response<Results> response) {

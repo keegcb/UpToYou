@@ -47,7 +47,6 @@ public class Selector {
 
     public int activitySelection(List<ActivityPreference> activityPrefs){
         int activity = 0;
-        String search = "";
         List<ActivityPreference> activityPref = activityPrefs;
         int listSize = activityPref.size();
         Random rand = new Random();
@@ -57,7 +56,6 @@ public class Selector {
         for(int i=0; i<listSize; i++){
             if(i == randNum){
                 activityPreference = activityPref.get(i);
-                search = activityPreference.getActivityName();
                 activity = activityPreference.getActivityId();
             }
         }
@@ -127,6 +125,289 @@ public class Selector {
                 typeList.add(placeType);
         }
         return typeList;
+    }
+
+    public Call<Results> foodSelector(JsonNearbyPlacesAPI jsonNearbyPlacesAPI, int distance){
+        Call<Results> call = jsonNearbyPlacesAPI.getFoodResults();
+        switch (distance){
+            case 5:
+                call = jsonNearbyPlacesAPI.getFoodResults();
+                break;
+            case 10:
+                call = jsonNearbyPlacesAPI.getFoodResults10();
+                break;
+            case 20:
+                call = jsonNearbyPlacesAPI.getFoodResults20();
+                break;
+            case 30:
+                call = jsonNearbyPlacesAPI.getFoodResults30();
+                break;
+            default:
+                call = jsonNearbyPlacesAPI.getFoodResults();
+        }
+        return call;
+    }
+
+    public Call<Results> activitySelector(JsonNearbyPlacesAPI jsonNearbyPlacesAPI, int activity, int distance){
+        Call <Results> call = jsonNearbyPlacesAPI.getActivityTourist();
+        switch (activity){
+            case 1:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityAmusement();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityAmusement10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityAmusement20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityAmusement30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityAmusement();
+                }
+                break;
+            case 2:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityAquarium();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityAquarium10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityAquarium20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityAquarium30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityAquarium();
+                }
+                break;
+            case 3:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityArt();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityArt10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityArt20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityArt30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityArt();
+                }
+                break;
+            case 4:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityBowling();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityBowling10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityBowling20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityBowling30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityBowling();
+                }
+                break;
+            case 5:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityCasino();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityCasino10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityCasino20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityCasino30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityCasino();
+                }
+                break;
+            case 6:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityClothing();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityClothing10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityClothing20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityClothing30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityClothing();
+                }
+                break;
+            case 7:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityMovie();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityMovie10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityMovie20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityMovie30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityMovie();
+                }
+                break;
+            case 8:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityMuseum();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityMuseum10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityMuseum20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityMuseum30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityMuseum();
+                }
+                break;
+            case 9:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityClub();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityClub10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityClub20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityClub30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityClub();
+                }
+                break;
+            case 10:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityPark();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityPark10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityPark20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityPark30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityPark();
+                }
+                break;
+            case 11:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityMall();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityMall10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityMall20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityMall30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityMall();
+                }
+                break;
+            case 12:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivitySpa();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivitySpa10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivitySpa20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivitySpa30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivitySpa();
+                }
+                break;
+            case 13:
+                switch (distance){
+                    case 5:
+                        call = jsonNearbyPlacesAPI.getActivityTourist();
+                        break;
+                    case 10:
+                        call = jsonNearbyPlacesAPI.getActivityTourist10();
+                        break;
+                    case 20:
+                        call = jsonNearbyPlacesAPI.getActivityTourist20();
+                        break;
+                    case 30:
+                        call = jsonNearbyPlacesAPI.getActivityTourist30();
+                        break;
+                    default:
+                        call = jsonNearbyPlacesAPI.getActivityTourist();
+                }
+                break;
+                    /*
+                case 14:
+                    switch (distance){
+                        case 5:
+                            call = jsonNearbyPlacesAPI.getActivityZoo();
+                            break;
+                        case 10:
+                            call = jsonNearbyPlacesAPI.getActivityZoo10();
+                            break;
+                        case 20:
+                            call = jsonNearbyPlacesAPI.getActivityZoo20();
+                            break;
+                        case 30:
+                            call = jsonNearbyPlacesAPI.getActivityZoo30();
+                            break;
+                        default:
+                            call = jsonNearbyPlacesAPI.getActivityZoo();
+                    }
+                    break;
+                     */
+            default: call = jsonNearbyPlacesAPI.getActivityTourist();
+        }
+        return call;
     }
 
 
